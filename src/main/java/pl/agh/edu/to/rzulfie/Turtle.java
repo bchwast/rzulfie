@@ -2,10 +2,19 @@ package pl.agh.edu.to.rzulfie;
 
 public class Turtle {
 
-    // robimy cos z kolorami rzulfi?
-    private final int id;
+    private final Color color;
+    private final Player owner;
 
-    public Turtle(int id) {
-        this.id = id;
+    public Turtle(Color color, Player owner) {
+        this.color = color;
+        this.owner = owner;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public Player getOwner() {
+        return owner;
     }
 }
