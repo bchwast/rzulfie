@@ -3,6 +3,7 @@ package pl.agh.edu.to.rzulfie;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.springframework.boot.SpringApplication;
@@ -22,6 +23,12 @@ public class RzulfieApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        var board = new GridPane();
+        board.setGridLinesVisible(true);
+
+
+
         Pane helloPane = new Pane(new Label("Hello JavaFx"));
         primaryStage.setScene(new Scene(helloPane));
         primaryStage.show();
