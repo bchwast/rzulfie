@@ -1,5 +1,11 @@
 package pl.agh.edu.to.rzulfie;
 
 public class Turtle {
-    private int id;
+
+    // robimy cos z kolorami rzulfi?
+    private final int id;
+
+    public Turtle(int id) {
+        this.id = id;
+    }
 }
