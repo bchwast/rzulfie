@@ -8,6 +8,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+import pl.agh.edu.to.rzulfie.model.service.GameResultService;
 
 @SpringBootApplication
 public class RzulfieApplication extends Application {
@@ -18,7 +20,8 @@ public class RzulfieApplication extends Application {
 
     @Override
     public void init() {
-        SpringApplication.run(getClass()).getAutowireCapableBeanFactory().autowireBean(this);
+        ConfigurableApplicationContext context = SpringApplication.run(RzulfieApplication.class);
+        GameResultService service = context.getBean(GameResultService.class);
     }
 
     @Override
