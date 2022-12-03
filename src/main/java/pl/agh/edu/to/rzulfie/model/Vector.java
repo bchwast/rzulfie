@@ -1,4 +1,4 @@
-package pl.agh.edu.to.rzulfie;
+package pl.agh.edu.to.rzulfie.model;
 
 import java.util.Objects;
 
@@ -10,6 +10,18 @@ public class Vector {
     public Vector(int xCoordinate, int yCoordinate) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
+    }
+
+    public int getXCoordinate() {
+        return xCoordinate;
+    }
+
+    public int getYCoordinate() {
+        return yCoordinate;
+    }
+
+    public Vector add(Vector vector) {
+        return new Vector(xCoordinate + vector.getXCoordinate(), yCoordinate + vector.getYCoordinate());
     }
 
     @Override
@@ -27,5 +39,13 @@ public class Vector {
     @Override
     public int hashCode() {
         return Objects.hash(xCoordinate, yCoordinate);
+    }
+
+    @Override
+    public String toString() {
+        return "Vector{" +
+                "xCoordinate=" + xCoordinate +
+                ", yCoordinate=" + yCoordinate +
+                '}';
     }
 }

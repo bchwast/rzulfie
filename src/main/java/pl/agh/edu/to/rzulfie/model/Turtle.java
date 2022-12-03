@@ -1,4 +1,4 @@
-package pl.agh.edu.to.rzulfie;
+package pl.agh.edu.to.rzulfie.model;
 
 public class Turtle {
 
@@ -16,5 +16,10 @@ public class Turtle {
 
     public Player getOwner() {
         return owner;
+    }
+
+    @Override
+    public String toString() {
+        return color + " turtle";
     }
 }

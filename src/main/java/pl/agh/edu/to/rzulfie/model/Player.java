@@ -1,4 +1,4 @@
-package pl.agh.edu.to.rzulfie;
+package pl.agh.edu.to.rzulfie.model;
 
 public class Player {
 
@@ -9,6 +9,11 @@ public class Player {
     }
 
     public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
         return name;
     }
 }

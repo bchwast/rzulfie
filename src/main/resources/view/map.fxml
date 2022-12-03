@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            stylesheets="view/map.css"
+            fx:controller="pl.agh.edu.to.rzulfie.controller.MapController"
+            prefHeight="400.0" prefWidth="600.0" minHeight="600.0" minWidth="600.0">
+    <top>
+        <HBox styleClass="form">
+            <Label text="Enter number of players:" prefWidth="200"/>
+            <TextField fx:id="numberOfPlayersField" promptText="Enter number of players..." prefWidth="300"/>
+            <Button text="Start" onAction="#startButtonClicked" />
+            <Text fx:id="currentPlayer" text="Player: " />
+        </HBox>
+    </top>
+    <center>
+        <GridPane fx:id="mapPane" />
+    </center>
+    <bottom>
+        <HBox>
+            <HBox>
+                <Label text="Select turtle:"/>
+                <ComboBox fx:id="turtleComboBox" />
+            </HBox>
+            <Label fx:id="selectedTurtleLabel" text="Selected turtle: " />
+            <Button text="Move right" onAction="#moveRightButtonClicked" />
+        </HBox>
+    </bottom>
+
+</BorderPane>
