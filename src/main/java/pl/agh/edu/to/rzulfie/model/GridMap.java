@@ -1,5 +1,7 @@
 package pl.agh.edu.to.rzulfie.model;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -14,6 +16,20 @@ public class GridMap {
         this.fieldsByPosition = fieldsByPosition;
         this.mapSize = mapSize;
         this.finishPosition = finishPosition;
+    }
+
+    public static GridMap generateStraightLineGridMap(){
+        int size = 10;
+        int startIndex = 1; // 0 axis are taken by the map key
+
+        Map<Vector,MapField> map = new HashMap<>();
+
+        for (int x = startIndex; x <= size; x++) {
+            Vector position = new Vector(x,startIndex);
+            map.put(position,new MapField(Collections.emptyList(),position));
+        }
+
+        return new GridMap(map,new Vector(size,size),new Vector(size,1));
     }
 
     public MapField getFieldWithTurtle(Turtle turtle) {
@@ -37,4 +53,5 @@ public class GridMap {
     public Vector getFinishPosition() {
         return finishPosition;
     }
+
 }

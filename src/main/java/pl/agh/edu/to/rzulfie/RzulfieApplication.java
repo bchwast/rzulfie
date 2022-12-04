@@ -45,19 +45,7 @@ public class RzulfieApplication extends Application {
         primaryStage.minHeightProperty().bind(rootLayout.minHeightProperty());
     }
 
-    private GridMap generateStraightLineGridMap(){
-        int size = 10;
-        int startIndex = 1; // 0 axis are taken by the map key
 
-        Map<Vector,MapField> map = new HashMap<>();
-
-        for (int x = startIndex; x <= size; x++) {
-            Vector position = new Vector(x,startIndex);
-            map.put(position,new MapField(Collections.emptyList(),position));
-        }
-
-        return new GridMap(map,new Vector(size,size),new Vector(size,1));
-    }
 
     @Override
     public void start(Stage primaryStage){
@@ -69,7 +57,7 @@ public class RzulfieApplication extends Application {
 
             // set initial data into controller
            MapController mapController = loader.getController();
-           GameHandler gameHandler = new GameHandler(generateStraightLineGridMap());
+           GameHandler gameHandler = new GameHandler(GridMap.generateStraightLineGridMap());
            mapController.setGameHandler(gameHandler);
            mapController.init();
 
