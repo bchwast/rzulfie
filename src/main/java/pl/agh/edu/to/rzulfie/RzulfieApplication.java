@@ -9,19 +9,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import pl.agh.edu.to.rzulfie.controller.MapController;
-import pl.agh.edu.to.rzulfie.model.Color;
-import pl.agh.edu.to.rzulfie.model.GameHandler;
-import pl.agh.edu.to.rzulfie.model.GridMap;
-import pl.agh.edu.to.rzulfie.model.MapField;
-import pl.agh.edu.to.rzulfie.model.Player;
-import pl.agh.edu.to.rzulfie.model.Turtle;
-import pl.agh.edu.to.rzulfie.model.Vector;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @SpringBootApplication
 public class RzulfieApplication extends Application {
@@ -45,21 +34,17 @@ public class RzulfieApplication extends Application {
         primaryStage.minHeightProperty().bind(rootLayout.minHeightProperty());
     }
 
-
-
     @Override
-    public void start(Stage primaryStage){
-
+    public void start(Stage primaryStage) {
         try {
             var loader = new FXMLLoader(getClass().getResource("/view/map.fxml"));
             loader.setControllerFactory(context::getBean);
             BorderPane rootLayout = loader.load();
 
             // set initial data into controller
-           MapController mapController = loader.getController();
-           GameHandler gameHandler = new GameHandler(GridMap.generateStraightLineGridMap());
-           mapController.setGameHandler(gameHandler);
-           mapController.init();
+            MapController mapController = loader.getController();
+            mapController.createGameHandler();
+            mapController.init();
 
             // add layout to a scene and show them all
             configureStage(primaryStage, rootLayout);

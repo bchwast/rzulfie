@@ -2,6 +2,7 @@ package pl.agh.edu.to.rzulfie.controller;
 
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -11,36 +12,49 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.agh.edu.to.rzulfie.model.*;
+import pl.agh.edu.to.rzulfie.model.GameResult;
+import pl.agh.edu.to.rzulfie.model.game.GameState;
+import pl.agh.edu.to.rzulfie.model.game.GridMap;
+import pl.agh.edu.to.rzulfie.model.game.Move;
+import pl.agh.edu.to.rzulfie.model.game.Turtle;
+import pl.agh.edu.to.rzulfie.model.game.Vector;
 import pl.agh.edu.to.rzulfie.model.service.GameResultService;
+
+import java.time.Instant;
+import java.util.Date;
+import java.util.Optional;
 
 @Component
 public class MapController {
 
-    private static final double CELL_SIZE = 50;
+    private static final double CELL_SIZE = 60;
 
     @FXML
     private ComboBox<Turtle> turtleComboBox;
-    @FXML
-    private Label selectedTurtleLabel;
     @FXML
     private TextField numberOfPlayersField;
     @FXML
     private GridPane mapPane;
     @FXML
     private Text currentPlayer;
+    @FXML
+    private Text winner;
+    @FXML
+    private Button moveRightButton;
+    @FXML
+    private Button moveLeftButton;
 
     private final GameResultService gameResultService;
     private GameState gameState;
-    private GameHandler gameHandler;
+    private GridMap gridMap;
 
     @Autowired
     public MapController(GameResultService gameResultService) {
         this.gameResultService = gameResultService;
     }
 
-    public void setGameHandler(GameHandler gameHandler) {
-        this.gameHandler = gameHandler;
+    public void createGameHandler() {
+        this.gridMap = GridMap.generateStraightLineGridMap();
     }
 
     public void startButtonClicked() {
@@ -48,31 +62,34 @@ public class MapController {
         gameState = new GameState(numberOfPlayers);
 
         // set combo box items to turtles
-        // set selected turtle label to current turtle
-
         turtleComboBox.getItems().clear();
         turtleComboBox.getItems().addAll(gameState.getTurtles());
         turtleComboBox.selectionModelProperty().bindBidirectional(gameState.currentTurtleSelector());
 
         // bind current player label to current player
-        currentPlayer.textProperty().bind(gameState.getCurrentPlayer().asString());
+        // bind winner text to winning player
+        currentPlayer.textProperty().bind(gameState.currentPlayerProperty().asString());
+        winner.textProperty().bind(gameState.winnerProperty().asString());
+        winner.visibleProperty().set(false);
 
         // add turtles to the map
-        gameHandler.spawnTurtlesOnMap(gameState.getTurtles());
+        gridMap.spawnTurtlesOnMap(gameState.getTurtles());
     }
 
     public void moveRightButtonClicked() {
-        gameHandler.makeMove(gameState.getCurrentTurtle(), Move.RIGHT);
+        gridMap.makeMove(gameState.getCurrentTurtle(), Move.RIGHT);
+        checkGameOver();
         gameState.nextPlayer();
     }
+
     public void moveLeftButtonClicked() {
-        gameHandler.makeMove(gameState.getCurrentTurtle(), Move.LEFT);
+        gridMap.makeMove(gameState.getCurrentTurtle(), Move.LEFT);
         gameState.nextPlayer();
     }
 
     public void init() {
         mapPane.setGridLinesVisible(true);
-        Vector mapSize = gameHandler.getMap().getMapSize();
+        Vector mapSize = gridMap.getMapSize();
 
         Label yx = new Label("y \\ x");
         mapPane.add(yx, 0, mapSize.getYCoordinate(), 1, 1);
@@ -82,14 +99,14 @@ public class MapController {
 
         for (int x = 1; x <= mapSize.getXCoordinate(); x++) {
             mapPane.getColumnConstraints().add(new ColumnConstraints(CELL_SIZE));
-            Label label = new Label(String.format("%d", x));
+            var label = new Label(String.format("%d", x));
             GridPane.setHalignment(label, HPos.CENTER);
             mapPane.add(label, x, mapSize.getYCoordinate(), 1, 1);
         }
 
         for (int y = 1; y <= mapSize.getYCoordinate(); y++) {
             mapPane.getRowConstraints().add(new RowConstraints(CELL_SIZE));
-            Label label = new Label(String.format("%d", y));
+            var label = new Label(String.format("%d", y));
             GridPane.setHalignment(label, HPos.CENTER);
             mapPane.add(label, 0, mapSize.getYCoordinate() - y, 1, 1);
         }
@@ -97,13 +114,25 @@ public class MapController {
         // Bind turtle description for field to label representing map field
         for (int x = 1; x <= mapSize.getXCoordinate(); x++) {
             for (int y = 1; y <= mapSize.getYCoordinate(); y++) {
-                var l = new Label();
-                var field = gameHandler.getMap().getField(new Vector(x, y));
+                var label = new Label();
+                var field = gridMap.getField(new Vector(x, y));
+                GridPane.setHalignment(label, HPos.CENTER);
                 if (field.isPresent()) {
-                    l.textProperty().bind(field.get().getTurtleStringProperty());
-                    mapPane.add(l, x, mapSize.getYCoordinate()-y);
+                    label.textProperty().bind(field.get().turtleStringProperty());
+                    mapPane.add(label, x, mapSize.getYCoordinate() - y);
                 }
             }
+        }
+    }
+
+    private void checkGameOver() {
+        Optional<Turtle> winningTurtle = gridMap.getWinner();
+        boolean isFinished = gameState.handleWinner(winningTurtle);
+        if (isFinished) {
+            moveLeftButton.disableProperty().set(true);
+            moveRightButton.disableProperty().set(true);
+            winner.visibleProperty().set(true);
+            gameResultService.addResult(new GameResult(gameState.getWinner().getName(), Date.from(Instant.now())));
         }
     }
 }

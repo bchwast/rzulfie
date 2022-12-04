@@ -1,4 +1,4 @@
-package pl.agh.edu.to.rzulfie.model;
+package pl.agh.edu.to.rzulfie.model.game;
 
 import java.util.Objects;
 

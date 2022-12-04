@@ -1,33 +1,30 @@
-package pl.agh.edu.to.rzulfie.model;
+package pl.agh.edu.to.rzulfie.model.game;
 
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.SingleSelectionModel;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class GameState {
 
-    private final IntegerProperty numberOfPlayers;
     private final ObjectProperty<Player> currentPlayer;
     private final ObjectProperty<SingleSelectionModel<Turtle>> currentTurtleSelector;
+    private final ObjectProperty<Player> winner;
     private final List<Player> players;
-
     private final List<Turtle> turtles;
 
     public GameState(int numberOfPlayers) {
         this.players = IntStream.range(0, numberOfPlayers)
                 .mapToObj(i -> new Player(Integer.toString(i)))
                 .toList();
-        // TODO fix this (it will break for more than 4 players)
         this.turtles = IntStream.range(0, numberOfPlayers)
                 .mapToObj(i -> new Turtle(Color.values()[i], players.get(i)))
                 .toList();
-        this.numberOfPlayers = new SimpleIntegerProperty(numberOfPlayers);
         this.currentPlayer = new SimpleObjectProperty<>(players.get(0));
+        this.winner = new SimpleObjectProperty<>();
         this.currentTurtleSelector = new SimpleObjectProperty<>(new SingleSelectionModel<>() {
             @Override
             protected Turtle getModelItem(int index) {
@@ -40,19 +37,19 @@ public class GameState {
             }
         });
     }
-    
-    public IntegerProperty getNumberOfPlayers() {
-        return numberOfPlayers;
-    }
-    
-    public void setNumberOfPlayers(int numberOfPlayers) {
-        this.numberOfPlayers.set(numberOfPlayers);
-    }
-    
-    public ObjectProperty<Player> getCurrentPlayer() {
+
+    public ObjectProperty<Player> currentPlayerProperty() {
         return currentPlayer;
     }
-    
+
+    public Player getWinner() {
+        return winner.get();
+    }
+
+    public ObjectProperty<Player> winnerProperty() {
+        return winner;
+    }
+
     public void nextPlayer() {
         var index = players.indexOf(currentPlayer.get());
         currentPlayer.set(players.get((index + 1) % players.size()));
@@ -62,11 +59,19 @@ public class GameState {
         return currentTurtleSelector;
     }
 
-    public Turtle getCurrentTurtle(){
+    public Turtle getCurrentTurtle() {
         return currentTurtleSelector.get().getSelectedItem();
     }
 
     public List<Turtle> getTurtles() {
         return turtles;
+    }
+
+    public boolean handleWinner(Optional<Turtle> winningTurtleOptional) {
+        if (winningTurtleOptional.isPresent()) {
+            winner.set(winningTurtleOptional.get().getOwner());
+            return true;
+        }
+        return false;
     }
 }

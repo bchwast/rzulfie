@@ -1,4 +1,4 @@
-package pl.agh.edu.to.rzulfie.model;
+package pl.agh.edu.to.rzulfie.model.game;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -6,12 +6,13 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class MapField {
 
     private List<Turtle> turtles;
-    private StringProperty turtleStringProperty;
+    private final StringProperty turtleStringProperty;
     private final Vector position;
 
     public MapField(List<Turtle> turtles, Vector position) {
@@ -43,7 +44,7 @@ public class MapField {
                 .reduce("", (a, b) -> a + b)));
     }
 
-    public StringProperty getTurtleStringProperty() {
+    public StringProperty turtleStringProperty() {
         return turtleStringProperty;
     }
 
@@ -51,7 +52,11 @@ public class MapField {
         return turtles.contains(turtle);
     }
 
-    public Turtle getUpperMostTurtle(){
-        return turtles.get(turtles.size()-1);
+    public Optional<Turtle> getUpperMostTurtle() {
+        if (turtles.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(turtles.get(turtles.size() - 1));
+        }
     }
 }

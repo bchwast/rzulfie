@@ -1,10 +1,12 @@
-package pl.agh.edu.to.rzulfie.model;
+package pl.agh.edu.to.rzulfie.model.game;
 
 public enum Color {
     RED,
     GREEN,
     BLUE,
-    YELLOW;
+    YELLOW,
+    ORANGE,
+    WHITE;
 
     @Override
     public String toString() {
@@ -13,6 +15,8 @@ public enum Color {
             case GREEN -> "G";
             case BLUE -> "B";
             case YELLOW -> "Y";
+            case ORANGE -> "O";
+            case WHITE -> "W";
         };
     }
 }
