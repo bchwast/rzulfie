@@ -105,29 +105,17 @@ public class MapController {
         mapPane.setGridLinesVisible(true);
         Vector mapSize = gridMap.getMapSize();
 
-        Label yx = new Label("y \\ x");
-        mapPane.add(yx, 0, mapSize.getYCoordinate(), 1, 1);
-        mapPane.getColumnConstraints().add(new ColumnConstraints(CELL_SIZE));
-        mapPane.getRowConstraints().add(new RowConstraints(CELL_SIZE));
-        GridPane.setHalignment(yx, HPos.CENTER);
-
-        for (int x = 1; x <= mapSize.getXCoordinate(); x++) {
+        for (int x = 0; x <= mapSize.getXCoordinate(); x++) {
             mapPane.getColumnConstraints().add(new ColumnConstraints(CELL_SIZE));
-            var label = new Label(String.format("%d", x));
-            GridPane.setHalignment(label, HPos.CENTER);
-            mapPane.add(label, x, mapSize.getYCoordinate(), 1, 1);
         }
 
-        for (int y = 1; y <= mapSize.getYCoordinate(); y++) {
+        for (int y = 0; y <= mapSize.getYCoordinate(); y++) {
             mapPane.getRowConstraints().add(new RowConstraints(CELL_SIZE));
-            var label = new Label(String.format("%d", y));
-            GridPane.setHalignment(label, HPos.CENTER);
-            mapPane.add(label, 0, mapSize.getYCoordinate() - y, 1, 1);
         }
 
         // Bind turtle description for field to label representing map field
-        for (int x = 1; x <= mapSize.getXCoordinate(); x++) {
-            for (int y = 1; y <= mapSize.getYCoordinate(); y++) {
+        for (int x = 0; x <= mapSize.getXCoordinate(); x++) {
+            for (int y = 0; y <= mapSize.getYCoordinate(); y++) {
                 var label = new Label();
                 var field = gridMap.getField(new Vector(x, y));
                 GridPane.setHalignment(label, HPos.CENTER);

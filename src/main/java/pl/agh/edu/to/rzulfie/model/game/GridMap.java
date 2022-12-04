@@ -10,7 +10,7 @@ public class GridMap {
 
     private final Map<Vector, MapField> fieldsByPosition;
     private final Vector mapSize;
-    private final Vector startPosition = new Vector(1, 1);
+    private final Vector startPosition = new Vector(0, 0);
     private final Vector finishPosition;
 
     public GridMap(Map<Vector, MapField> fieldsByPosition, Vector mapSize, Vector finishPosition) {
@@ -20,17 +20,20 @@ public class GridMap {
     }
 
     public static GridMap generateStraightLineGridMap() {
-        int size = 10;
-        int startIndex = 1; // 0 axis are taken by the map key
+        Vector start = new Vector(0,0);
+        Vector finish = new Vector(15,0);
+        Vector size = new Vector(15, 0);
 
         Map<Vector, MapField> map = new HashMap<>();
 
-        for (int x = startIndex; x <= size; x++) {
-            Vector position = new Vector(x, startIndex);
-            map.put(position, new MapField(Collections.emptyList(), position));
+        for (int x = start.getXCoordinate(); x <= size.getXCoordinate(); x++) {
+            for (int y = start.getYCoordinate(); y <= size.getYCoordinate(); y++) {
+                Vector position = new Vector(x, y);
+                map.put(position, new MapField(Collections.emptyList(), position));
+            }
         }
 
-        return new GridMap(map, new Vector(size, size), new Vector(size, 1));
+        return new GridMap(map, size, finish);
     }
 
     public MapField getFieldWithTurtle(Turtle turtle) {

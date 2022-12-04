@@ -3,3 +3,8 @@
     -fx-padding: 8;
     -fx-alignment: center-left;
 }
+
+.map {
+    -fx-alignment: center;
+    -fx-padding: 8;
+}

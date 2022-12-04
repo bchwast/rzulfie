@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.VBox?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             stylesheets="view/map.css"
@@ -20,15 +21,17 @@
             <Label text="Enter number of players:" prefWidth="200"/>
             <TextField fx:id="numberOfPlayersField" promptText="Enter number of players..." prefWidth="300"/>
             <Button text="Start" onAction="#startButtonClicked" />
-            <HBox>
-                <Label text="Current player: " />
-                <Text fx:id="currentPlayer" />
-            </HBox>
         </HBox>
     </top>
     <center>
         <HBox alignment="CENTER">
-            <GridPane fx:id="mapPane"/>
+            <VBox>
+                <HBox>
+                    <Label text="Current player: " />
+                    <Text fx:id="currentPlayer" />
+                </HBox>
+                <GridPane fx:id="mapPane" styleClass="map"/>
+            </VBox>
             <TableView fx:id="gameHistoryTable" prefHeight="200.0" prefWidth="200.0">
                 <columns>
                     <TableColumn fx:id="dateColumn" prefWidth="75.0" text="Date"/>
