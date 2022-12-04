@@ -27,6 +27,7 @@
                 <ComboBox fx:id="turtleComboBox" />
             </HBox>
             <Label fx:id="selectedTurtleLabel" text="Selected turtle: " />
+            <Button text="Move left" onAction="#moveLeftButtonClicked" />
             <Button text="Move right" onAction="#moveRightButtonClicked" />
         </HBox>
     </bottom>

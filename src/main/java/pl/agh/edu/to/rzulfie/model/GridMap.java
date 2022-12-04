@@ -8,12 +8,12 @@ public class GridMap {
     private final Map<Vector, MapField> fieldsByPosition;
     private final Vector mapSize;
     private final Vector startPosition = new Vector(1,1);
-    private final Vector metaPosition;
+    private final Vector finishPosition;
 
-    public GridMap(Map<Vector, MapField> fieldsByPosition, Vector mapSize,Vector metaPosition) {
+    public GridMap(Map<Vector, MapField> fieldsByPosition, Vector mapSize,Vector finishPosition) {
         this.fieldsByPosition = fieldsByPosition;
         this.mapSize = mapSize;
-        this.metaPosition = metaPosition;
+        this.finishPosition = finishPosition;
     }
 
     public MapField getFieldWithTurtle(Turtle turtle) {
@@ -30,18 +30,11 @@ public class GridMap {
         return Optional.ofNullable(fieldsByPosition.get(position));
     }
 
-    @Override
-    public String toString() {
-        return "GridMap{" +
-                "fieldsByPosition=" + fieldsByPosition.keySet() +
-                '}';
-    }
-
     public Vector getStartPosition() {
         return startPosition;
     }
 
-    public Vector getMetaPosition() {
-        return metaPosition;
+    public Vector getFinishPosition() {
+        return finishPosition;
     }
 }

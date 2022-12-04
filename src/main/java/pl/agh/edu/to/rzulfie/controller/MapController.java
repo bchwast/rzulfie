@@ -65,6 +65,10 @@ public class MapController {
         gameHandler.makeMove(gameState.getCurrentTurtle(), Move.RIGHT);
         gameState.nextPlayer();
     }
+    public void moveLeftButtonClicked() {
+        gameHandler.makeMove(gameState.getCurrentTurtle(), Move.LEFT);
+        gameState.nextPlayer();
+    }
 
     public void init() {
         mapPane.setGridLinesVisible(true);

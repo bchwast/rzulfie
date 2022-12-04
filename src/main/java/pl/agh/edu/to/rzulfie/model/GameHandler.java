@@ -1,7 +1,6 @@
 package pl.agh.edu.to.rzulfie.model;
 
 import java.util.List;
-import java.util.Optional;
 
 public class GameHandler {
 
@@ -35,11 +34,11 @@ public class GameHandler {
     }
 
     private Boolean gameOver(Vector destination) {
-        return destination.equals(map.getMetaPosition());
+        return destination.equals(map.getFinishPosition());
     }
 
     private Turtle getWinner() {
-        MapField metaMapField = map.getField(map.getMetaPosition()).orElseThrow(
+        MapField metaMapField = map.getField(map.getFinishPosition()).orElseThrow(
                 () -> new IllegalStateException("MetaField was not initialized"));
 
         return metaMapField.getUpperMostTurtle();

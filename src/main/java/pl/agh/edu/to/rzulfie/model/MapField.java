@@ -40,7 +40,7 @@ public class MapField {
     private void recalculateTurtleStringProperty() {
         turtleStringProperty.set(StringUtils.trimToEmpty(turtles.stream().map(Turtle::getColor)
                 .map(Color::toString)
-                .reduce("", (a, b) -> a + "+" + b)));
+                .reduce("", (a, b) -> a + b)));
     }
 
     public StringProperty getTurtleStringProperty() {
