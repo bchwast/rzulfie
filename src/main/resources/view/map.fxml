@@ -12,13 +12,16 @@
             xmlns:fx="http://javafx.com/fxml"
             stylesheets="view/map.css"
             fx:controller="pl.agh.edu.to.rzulfie.controller.MapController"
-            prefHeight="400.0" prefWidth="600.0" minHeight="600.0" minWidth="600.0">
+            prefHeight="800.0" prefWidth="1200.0" minHeight="600.0" minWidth="1000.0">
     <top>
         <HBox styleClass="form">
             <Label text="Enter number of players:" prefWidth="200"/>
             <TextField fx:id="numberOfPlayersField" promptText="Enter number of players..." prefWidth="300"/>
             <Button text="Start" onAction="#startButtonClicked" />
-            <Text fx:id="currentPlayer" text="Player: " />
+            <HBox>
+                <Label text="Current player: " />
+                <Text fx:id="currentPlayer" />
+            </HBox>
         </HBox>
     </top>
     <center>
