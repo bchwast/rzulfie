@@ -10,8 +10,8 @@ public enum Move {
         return switch (this) {
             case LEFT -> new Vector(-1, 0);
             case RIGHT -> new Vector(1, 0);
-            case UP -> new Vector(0, -1);
-            case DOWN -> new Vector(0, 1);
+            case UP -> new Vector(0, 1);
+            case DOWN -> new Vector(0, -1);
         };
     }
 }
