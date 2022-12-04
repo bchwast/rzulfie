@@ -1,10 +1,16 @@
 package pl.agh.edu.to.rzulfie.controller;
 
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -43,6 +49,12 @@ public class MapController {
     private Button moveRightButton;
     @FXML
     private Button moveLeftButton;
+    @FXML
+    private TableView<GameResult> gameHistoryTable;
+    @FXML
+    private TableColumn<GameResult, Date> dateColumn;
+    @FXML
+    private TableColumn<GameResult, String> winnerColumn;
 
     private final GameResultService gameResultService;
     private GameState gameState;
@@ -88,6 +100,8 @@ public class MapController {
     }
 
     public void init() {
+        initializeResultTable();
+
         mapPane.setGridLinesVisible(true);
         Vector mapSize = gridMap.getMapSize();
 
@@ -134,5 +148,12 @@ public class MapController {
             winner.visibleProperty().set(true);
             gameResultService.addResult(new GameResult(gameState.getWinner().getName(), Date.from(Instant.now())));
         }
+    }
+
+    private void initializeResultTable() {
+        ObservableList<GameResult> tableData = FXCollections.observableArrayList(gameResultService.getAllResults());
+        dateColumn.setCellValueFactory(dataValue -> new SimpleObjectProperty<>(dataValue.getValue().getGameDate()));
+        winnerColumn.setCellValueFactory(dataValue -> new SimpleStringProperty(dataValue.getValue().getWinnerName()));
+        gameHistoryTable.setItems(tableData);
     }
 }
