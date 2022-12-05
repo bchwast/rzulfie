@@ -88,6 +88,10 @@ public class ApplicationController {
 
         // add turtles to the map
         gridMap.spawnTurtlesOnMap(gameState.getTurtles());
+
+        moveLeftButton.disableProperty().set(false);
+        moveRightButton.disableProperty().set(false);
+        winner.visibleProperty().set(false);
     }
 
     public void moveRightButtonClicked() {
@@ -141,6 +145,7 @@ public class ApplicationController {
             moveRightButton.disableProperty().set(true);
             winner.visibleProperty().set(true);
             gameResultService.addResult(new GameResult(gameState.getWinner().getName(), Date.from(Instant.now())));
+            initializeStartingState();
         }
     }
 
@@ -150,6 +155,7 @@ public class ApplicationController {
         winnerColumn.setCellValueFactory(dataValue -> new SimpleStringProperty(dataValue.getValue().getWinnerName()));
         gameHistoryTable.setItems(tableData);
 
+        numberOfPlayersComboBox.getItems().clear();
         numberOfPlayersComboBox.getItems().addAll(IntStream.rangeClosed(1, 10).boxed().toList());
     }
 
