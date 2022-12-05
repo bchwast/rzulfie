@@ -31,7 +31,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Component
-public class MapController {
+public class ApplicationController {
 
     private static final double CELL_SIZE = 60;
 
@@ -61,17 +61,15 @@ public class MapController {
     private GridMap gridMap;
 
     @Autowired
-    public MapController(GameResultService gameResultService) {
+    public ApplicationController(GameResultService gameResultService) {
         this.gameResultService = gameResultService;
-    }
-
-    public void createGameHandler() {
-        this.gridMap = GridMap.generateStraightLineGridMap();
     }
 
     public void startButtonClicked() {
         int numberOfPlayers = Integer.parseInt(numberOfPlayersField.getText());
         gameState = new GameState(numberOfPlayers);
+        gridMap = GridMap.generateStraightLineGridMap();
+        init();
 
         // set combo box items to turtles
         turtleComboBox.getItems().clear();
@@ -100,7 +98,10 @@ public class MapController {
     }
 
     public void init() {
-        initializeResultTable();
+        mapPane.getChildren().clear();
+        mapPane.setGridLinesVisible(false);
+        mapPane.getColumnConstraints().clear();
+        mapPane.getRowConstraints().clear();
 
         mapPane.setGridLinesVisible(true);
         Vector mapSize = gridMap.getMapSize();
@@ -139,7 +140,7 @@ public class MapController {
         }
     }
 
-    private void initializeResultTable() {
+    public void initializeResultTable() {
         ObservableList<GameResult> tableData = FXCollections.observableArrayList(gameResultService.getAllResults());
         dateColumn.setCellValueFactory(dataValue -> new SimpleObjectProperty<>(dataValue.getValue().getGameDate()));
         winnerColumn.setCellValueFactory(dataValue -> new SimpleStringProperty(dataValue.getValue().getWinnerName()));

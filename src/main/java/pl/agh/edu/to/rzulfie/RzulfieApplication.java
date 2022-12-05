@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import pl.agh.edu.to.rzulfie.controller.MapController;
+import pl.agh.edu.to.rzulfie.controller.ApplicationController;
 
 import java.io.IOException;
 
@@ -37,14 +37,13 @@ public class RzulfieApplication extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            var loader = new FXMLLoader(getClass().getResource("/view/map.fxml"));
+            var loader = new FXMLLoader(getClass().getResource("/view/ApplicationPane.fxml"));
             loader.setControllerFactory(context::getBean);
             BorderPane rootLayout = loader.load();
 
             // set initial data into controller
-            MapController mapController = loader.getController();
-            mapController.createGameHandler();
-            mapController.init();
+            ApplicationController applicationController = loader.getController();
+            applicationController.initializeResultTable();
 
             // add layout to a scene and show them all
             configureStage(primaryStage, rootLayout);
