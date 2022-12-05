@@ -8,8 +8,8 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.text.Text?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             stylesheets="view/app.css"
@@ -20,7 +20,7 @@
             <HBox styleClass="form">
                 <Label text="Select number of players:" prefWidth="200"/>
                 <ComboBox fx:id="numberOfPlayersComboBox" prefWidth="100"/>
-                <Button text="Start" onAction="#startButtonClicked" />
+                <Button fx:id="startButton" text="Start" onAction="#startButtonClicked"/>
                 <Text fx:id="playerTurtle"/>
             </HBox>
             <HBox alignment="CENTER">

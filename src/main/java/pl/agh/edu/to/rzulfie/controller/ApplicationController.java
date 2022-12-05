@@ -57,11 +57,12 @@ public class ApplicationController {
     private TableColumn<GameResult, String> winnerColumn;
     @FXML
     private Text playerTurtle;
+    @FXML
+    private Button startButton;
 
     private final GameResultService gameResultService;
     private GameState gameState;
     private GridMap gridMap;
-    private int playersAmount;
 
     @Autowired
     public ApplicationController(GameResultService gameResultService) {
@@ -69,16 +70,15 @@ public class ApplicationController {
     }
 
     public void startButtonClicked() {
-        playersAmount = numberOfPlayersComboBox.getValue();
+        int playersAmount = numberOfPlayersComboBox.getValue();
         gameState = new GameState(playersAmount);
         gridMap = GridMap.generateStraightLineGridMap();
-        init();
+        initializeMap();
         printPlayers();
 
         // set combo box items to turtles
-        turtleComboBox.getItems().clear();
-        turtleComboBox.getItems().addAll(gameState.getTurtles());
-        turtleComboBox.selectionModelProperty().bindBidirectional(gameState.currentTurtleSelector());
+        turtleComboBox.setItems(FXCollections.observableList(gameState.getTurtles()));
+        gameState.currentTurtleSelector().bind(turtleComboBox.selectionModelProperty());
 
         // bind current player label to current player
         // bind winner text to winning player
@@ -105,7 +105,31 @@ public class ApplicationController {
         gameState.nextPlayer();
     }
 
-    public void init() {
+    public void initializeStartingState() {
+        ObservableList<GameResult> tableData = FXCollections.observableArrayList(gameResultService.getAllResults());
+        dateColumn.setCellValueFactory(dataValue -> new SimpleObjectProperty<>(dataValue.getValue().getGameDate()));
+        winnerColumn.setCellValueFactory(dataValue -> new SimpleStringProperty(dataValue.getValue().getWinnerName()));
+        gameHistoryTable.setItems(tableData);
+
+        numberOfPlayersComboBox.getItems().clear();
+        numberOfPlayersComboBox.getItems().addAll(IntStream.rangeClosed(1, 6).boxed().toList());
+
+        startButton.disableProperty().bind(numberOfPlayersComboBox.valueProperty().isNull());
+    }
+
+    private void checkGameOver() {
+        Optional<Turtle> winningTurtle = gridMap.getWinner();
+        boolean isFinished = gameState.handleWinner(winningTurtle);
+        if (isFinished) {
+            moveLeftButton.disableProperty().set(true);
+            moveRightButton.disableProperty().set(true);
+            winner.visibleProperty().set(true);
+            gameResultService.addResult(new GameResult(gameState.getWinner().getName(), Date.from(Instant.now())));
+            initializeStartingState();
+        }
+    }
+
+    private void initializeMap() {
         mapPane.getChildren().clear();
         mapPane.setGridLinesVisible(false);
         mapPane.getColumnConstraints().clear();
@@ -135,28 +159,6 @@ public class ApplicationController {
                 }
             }
         }
-    }
-
-    private void checkGameOver() {
-        Optional<Turtle> winningTurtle = gridMap.getWinner();
-        boolean isFinished = gameState.handleWinner(winningTurtle);
-        if (isFinished) {
-            moveLeftButton.disableProperty().set(true);
-            moveRightButton.disableProperty().set(true);
-            winner.visibleProperty().set(true);
-            gameResultService.addResult(new GameResult(gameState.getWinner().getName(), Date.from(Instant.now())));
-            initializeStartingState();
-        }
-    }
-
-    public void initializeStartingState() {
-        ObservableList<GameResult> tableData = FXCollections.observableArrayList(gameResultService.getAllResults());
-        dateColumn.setCellValueFactory(dataValue -> new SimpleObjectProperty<>(dataValue.getValue().getGameDate()));
-        winnerColumn.setCellValueFactory(dataValue -> new SimpleStringProperty(dataValue.getValue().getWinnerName()));
-        gameHistoryTable.setItems(tableData);
-
-        numberOfPlayersComboBox.getItems().clear();
-        numberOfPlayersComboBox.getItems().addAll(IntStream.rangeClosed(1, 10).boxed().toList());
     }
 
     private void printPlayers() {

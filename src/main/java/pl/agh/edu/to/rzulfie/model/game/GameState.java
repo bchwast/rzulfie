@@ -18,7 +18,7 @@ public class GameState {
 
     public GameState(int numberOfPlayers) {
         this.players = IntStream.range(0, numberOfPlayers)
-                .mapToObj(i -> new Player(Integer.toString(i)))
+                .mapToObj(i -> new Player("Player " + i))
                 .toList();
         this.turtles = IntStream.range(0, numberOfPlayers)
                 .mapToObj(i -> new Turtle(Color.values()[i], players.get(i)))
