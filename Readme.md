@@ -2,6 +2,8 @@
 
 #### Piotr Witek, Mateusz Wejman, Piotr Kowalczyk, Bartłomiej Chwast
 
+In order to run application, use gradle script
+
 ## Changelog:
 #### Milestone 1:
 * created model with turtles, players and 1d map
