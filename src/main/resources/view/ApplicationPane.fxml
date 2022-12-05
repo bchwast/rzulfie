@@ -20,6 +20,7 @@
             <Label text="Select number of players:" prefWidth="200"/>
             <ComboBox fx:id="numberOfPlayersComboBox" prefWidth="100"/>
             <Button text="Start" onAction="#startButtonClicked" />
+            <Text fx:id="playerTurtle"/>
         </HBox>
     </top>
     <center>

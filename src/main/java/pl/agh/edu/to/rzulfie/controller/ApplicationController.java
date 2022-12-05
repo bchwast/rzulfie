@@ -55,10 +55,13 @@ public class ApplicationController {
     private TableColumn<GameResult, Date> dateColumn;
     @FXML
     private TableColumn<GameResult, String> winnerColumn;
+    @FXML
+    private Text playerTurtle;
 
     private final GameResultService gameResultService;
     private GameState gameState;
     private GridMap gridMap;
+    private int playersAmount;
 
     @Autowired
     public ApplicationController(GameResultService gameResultService) {
@@ -66,10 +69,11 @@ public class ApplicationController {
     }
 
     public void startButtonClicked() {
-        int numberOfPlayers = numberOfPlayersComboBox.getValue();
-        gameState = new GameState(numberOfPlayers);
+        playersAmount = numberOfPlayersComboBox.getValue();
+        gameState = new GameState(playersAmount);
         gridMap = GridMap.generateStraightLineGridMap();
         init();
+        printPlayers();
 
         // set combo box items to turtles
         turtleComboBox.getItems().clear();
@@ -147,5 +151,9 @@ public class ApplicationController {
         gameHistoryTable.setItems(tableData);
 
         numberOfPlayersComboBox.getItems().addAll(IntStream.rangeClosed(1, 10).boxed().toList());
+    }
+
+    private void printPlayers() {
+        playerTurtle.setText(gameState.getTurtles().toString());
     }
 }

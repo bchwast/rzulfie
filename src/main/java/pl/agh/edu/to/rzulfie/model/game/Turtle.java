@@ -26,6 +26,6 @@ public class Turtle {
 
     @Override
     public String toString() {
-        return color + " turtle";
+        return color + " - " + owner;
     }
 }
