@@ -43,7 +43,7 @@ public class RzulfieApplication extends Application {
 
             // set initial data into controller
             ApplicationController applicationController = loader.getController();
-            applicationController.initializeResultTable();
+            applicationController.initializeStartingState();
 
             // add layout to a scene and show them all
             configureStage(primaryStage, rootLayout);

@@ -5,7 +5,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -18,8 +17,8 @@
             prefHeight="800.0" prefWidth="1200.0" minHeight="600.0" minWidth="1000.0">
     <top>
         <HBox styleClass="form">
-            <Label text="Enter number of players:" prefWidth="200"/>
-            <TextField fx:id="numberOfPlayersField" promptText="Enter number of players..." prefWidth="300"/>
+            <Label text="Select number of players:" prefWidth="200"/>
+            <ComboBox fx:id="numberOfPlayersComboBox" prefWidth="100"/>
             <Button text="Start" onAction="#startButtonClicked" />
         </HBox>
     </top>

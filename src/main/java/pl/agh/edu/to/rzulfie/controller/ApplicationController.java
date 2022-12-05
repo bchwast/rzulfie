@@ -11,7 +11,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -29,6 +28,7 @@ import pl.agh.edu.to.rzulfie.model.service.GameResultService;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 @Component
 public class ApplicationController {
@@ -38,7 +38,7 @@ public class ApplicationController {
     @FXML
     private ComboBox<Turtle> turtleComboBox;
     @FXML
-    private TextField numberOfPlayersField;
+    private ComboBox<Integer> numberOfPlayersComboBox;
     @FXML
     private GridPane mapPane;
     @FXML
@@ -66,7 +66,7 @@ public class ApplicationController {
     }
 
     public void startButtonClicked() {
-        int numberOfPlayers = Integer.parseInt(numberOfPlayersField.getText());
+        int numberOfPlayers = numberOfPlayersComboBox.getValue();
         gameState = new GameState(numberOfPlayers);
         gridMap = GridMap.generateStraightLineGridMap();
         init();
@@ -140,10 +140,12 @@ public class ApplicationController {
         }
     }
 
-    public void initializeResultTable() {
+    public void initializeStartingState() {
         ObservableList<GameResult> tableData = FXCollections.observableArrayList(gameResultService.getAllResults());
         dateColumn.setCellValueFactory(dataValue -> new SimpleObjectProperty<>(dataValue.getValue().getGameDate()));
         winnerColumn.setCellValueFactory(dataValue -> new SimpleStringProperty(dataValue.getValue().getWinnerName()));
         gameHistoryTable.setItems(tableData);
+
+        numberOfPlayersComboBox.getItems().addAll(IntStream.rangeClosed(1, 10).boxed().toList());
     }
 }
