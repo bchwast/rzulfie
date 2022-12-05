@@ -23,7 +23,7 @@ class MapFieldTest {
         mapField.popTurtlesAboveTurtle(turtleA);
 
         //then
-        assertThat(mapField.turtleStringProperty().get()).isEqualTo("");
+        assertThat(mapField.fieldRepresentationProperty().get()).isEqualTo("");
     }
 
     @Test
@@ -40,7 +40,7 @@ class MapFieldTest {
         mapField.popTurtlesAboveTurtle(turtleB);
 
         //then
-        assertThat(mapField.turtleStringProperty().get()).isEqualTo("R");
+        assertThat(mapField.fieldRepresentationProperty().get()).isEqualTo("R");
     }
 
     @Test
@@ -58,6 +58,6 @@ class MapFieldTest {
         mapField.addTurtlesOnTop(List.of(turtleD));
 
         //then
-        assertThat(mapField.turtleStringProperty().get()).isEqualTo("RBGY");
+        assertThat(mapField.fieldRepresentationProperty().get()).isEqualTo("RBGY");
     }
 }

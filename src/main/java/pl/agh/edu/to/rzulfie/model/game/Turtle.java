@@ -1,5 +1,7 @@
 package pl.agh.edu.to.rzulfie.model.game;
 
+import javafx.scene.shape.Rectangle;
+
 public class Turtle {
 
     private final Color color;
@@ -16,6 +18,10 @@ public class Turtle {
 
     public Player getOwner() {
         return owner;
+    }
+
+    public Rectangle getGraphicalRepresentation() {
+        return color.toImage();
     }
 
     @Override

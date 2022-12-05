@@ -40,11 +40,11 @@ class GridMapTest {
         gridMap.makeMove(turtle, Move.UP);
 
         //then
-        assertThat(gridMap.getField(new Vector(5, 5)).get().turtleStringProperty().get()).isEqualTo("");
-        assertThat(gridMap.getField(new Vector(4, 5)).get().turtleStringProperty().get()).isEqualTo("");
-        assertThat(gridMap.getField(new Vector(6, 5)).get().turtleStringProperty().get()).isEqualTo("");
-        assertThat(gridMap.getField(new Vector(5, 4)).get().turtleStringProperty().get()).isEqualTo("");
-        assertThat(gridMap.getField(new Vector(5, 6)).get().turtleStringProperty().get()).isEqualTo("R");
+        assertThat(gridMap.getField(new Vector(5, 5)).get().fieldRepresentationProperty().get()).isEqualTo("");
+        assertThat(gridMap.getField(new Vector(4, 5)).get().fieldRepresentationProperty().get()).isEqualTo("");
+        assertThat(gridMap.getField(new Vector(6, 5)).get().fieldRepresentationProperty().get()).isEqualTo("");
+        assertThat(gridMap.getField(new Vector(5, 4)).get().fieldRepresentationProperty().get()).isEqualTo("");
+        assertThat(gridMap.getField(new Vector(5, 6)).get().fieldRepresentationProperty().get()).isEqualTo("R");
     }
 
     @Test
@@ -56,11 +56,11 @@ class GridMapTest {
         gridMap.makeMove(turtle, Move.DOWN);
 
         //then
-        assertThat(gridMap.getField(new Vector(5, 5)).get().turtleStringProperty().get()).isEqualTo("");
-        assertThat(gridMap.getField(new Vector(4, 5)).get().turtleStringProperty().get()).isEqualTo("");
-        assertThat(gridMap.getField(new Vector(6, 5)).get().turtleStringProperty().get()).isEqualTo("");
-        assertThat(gridMap.getField(new Vector(5, 4)).get().turtleStringProperty().get()).isEqualTo("R");
-        assertThat(gridMap.getField(new Vector(5, 6)).get().turtleStringProperty().get()).isEqualTo("");
+        assertThat(gridMap.getField(new Vector(5, 5)).get().fieldRepresentationProperty().get()).isEqualTo("");
+        assertThat(gridMap.getField(new Vector(4, 5)).get().fieldRepresentationProperty().get()).isEqualTo("");
+        assertThat(gridMap.getField(new Vector(6, 5)).get().fieldRepresentationProperty().get()).isEqualTo("");
+        assertThat(gridMap.getField(new Vector(5, 4)).get().fieldRepresentationProperty().get()).isEqualTo("R");
+        assertThat(gridMap.getField(new Vector(5, 6)).get().fieldRepresentationProperty().get()).isEqualTo("");
     }
 
     @Test
@@ -72,11 +72,11 @@ class GridMapTest {
         gridMap.makeMove(turtle, Move.LEFT);
 
         //then
-        assertThat(gridMap.getField(new Vector(5, 5)).get().turtleStringProperty().get()).isEqualTo("");
-        assertThat(gridMap.getField(new Vector(4, 5)).get().turtleStringProperty().get()).isEqualTo("R");
-        assertThat(gridMap.getField(new Vector(6, 5)).get().turtleStringProperty().get()).isEqualTo("");
-        assertThat(gridMap.getField(new Vector(5, 4)).get().turtleStringProperty().get()).isEqualTo("");
-        assertThat(gridMap.getField(new Vector(5, 6)).get().turtleStringProperty().get()).isEqualTo("");
+        assertThat(gridMap.getField(new Vector(5, 5)).get().fieldRepresentationProperty().get()).isEqualTo("");
+        assertThat(gridMap.getField(new Vector(4, 5)).get().fieldRepresentationProperty().get()).isEqualTo("R");
+        assertThat(gridMap.getField(new Vector(6, 5)).get().fieldRepresentationProperty().get()).isEqualTo("");
+        assertThat(gridMap.getField(new Vector(5, 4)).get().fieldRepresentationProperty().get()).isEqualTo("");
+        assertThat(gridMap.getField(new Vector(5, 6)).get().fieldRepresentationProperty().get()).isEqualTo("");
     }
 
     @Test
@@ -88,10 +88,10 @@ class GridMapTest {
         gridMap.makeMove(turtle, Move.RIGHT);
 
         //then
-        assertThat(gridMap.getField(new Vector(5, 5)).get().turtleStringProperty().get()).isEqualTo("");
-        assertThat(gridMap.getField(new Vector(4, 5)).get().turtleStringProperty().get()).isEqualTo("");
-        assertThat(gridMap.getField(new Vector(6, 5)).get().turtleStringProperty().get()).isEqualTo("R");
-        assertThat(gridMap.getField(new Vector(5, 4)).get().turtleStringProperty().get()).isEqualTo("");
-        assertThat(gridMap.getField(new Vector(5, 6)).get().turtleStringProperty().get()).isEqualTo("");
+        assertThat(gridMap.getField(new Vector(5, 5)).get().fieldRepresentationProperty().get()).isEqualTo("");
+        assertThat(gridMap.getField(new Vector(4, 5)).get().fieldRepresentationProperty().get()).isEqualTo("");
+        assertThat(gridMap.getField(new Vector(6, 5)).get().fieldRepresentationProperty().get()).isEqualTo("R");
+        assertThat(gridMap.getField(new Vector(5, 4)).get().fieldRepresentationProperty().get()).isEqualTo("");
+        assertThat(gridMap.getField(new Vector(5, 6)).get().fieldRepresentationProperty().get()).isEqualTo("");
     }
 }

@@ -1,10 +1,12 @@
 package pl.agh.edu.to.rzulfie.model.game;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import org.apache.commons.lang3.StringUtils;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Orientation;
+import javafx.scene.layout.FlowPane;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -12,40 +14,34 @@ import java.util.stream.Stream;
 public class MapField {
 
     private List<Turtle> turtles;
-    private final StringProperty turtleStringProperty;
+    private final ObjectProperty<FlowPane> fieldRepresentationProperty;
     private final Vector position;
 
     public MapField(List<Turtle> turtles, Vector position) {
         this.turtles = turtles;
         this.position = position;
-        this.turtleStringProperty = new SimpleStringProperty();
-        recalculateTurtleStringProperty();
+        this.fieldRepresentationProperty = new SimpleObjectProperty<>();
+        recalculateFieldRepresentationProperty();
     }
 
     public List<Turtle> popTurtlesAboveTurtle(Turtle turtle) {
-        var movedTurtles = new ArrayList<>(turtles.subList(turtles.indexOf(turtle), turtles.size()));
+        var movedTurtles = turtles.subList(turtles.indexOf(turtle), turtles.size());
         turtles = turtles.subList(0, turtles.indexOf(turtle));
-        recalculateTurtleStringProperty();
+        recalculateFieldRepresentationProperty();
         return movedTurtles;
     }
 
     public void addTurtlesOnTop(List<Turtle> newTurtles) {
         turtles = Stream.concat(turtles.stream(), newTurtles.stream()).toList();
-        recalculateTurtleStringProperty();
+        recalculateFieldRepresentationProperty();
     }
 
     public Vector getPosition() {
         return position;
     }
 
-    private void recalculateTurtleStringProperty() {
-        turtleStringProperty.set(StringUtils.trimToEmpty(turtles.stream().map(Turtle::getColor)
-                .map(Color::toString)
-                .reduce("", (a, b) -> a + b)));
-    }
-
-    public StringProperty turtleStringProperty() {
-        return turtleStringProperty;
+    public ObjectProperty<FlowPane> fieldRepresentationProperty() {
+        return fieldRepresentationProperty;
     }
 
     public boolean hasTurtle(Turtle turtle) {
@@ -58,5 +54,14 @@ public class MapField {
         } else {
             return Optional.of(turtles.get(turtles.size() - 1));
         }
+    }
+
+    private void recalculateFieldRepresentationProperty() {
+        FlowPane flowPane = new FlowPane(Orientation.VERTICAL, 0, 1);
+        List<Turtle> turtlesCopy = new ArrayList<>(turtles);
+        Collections.reverse(turtlesCopy);
+        turtlesCopy.forEach(turtle -> flowPane.getChildren().add(turtle.getGraphicalRepresentation()));
+        flowPane.setPrefWrapLength(60);
+        fieldRepresentationProperty.set(flowPane);
     }
 }

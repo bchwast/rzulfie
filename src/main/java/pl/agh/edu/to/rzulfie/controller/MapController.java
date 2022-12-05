@@ -120,7 +120,8 @@ public class MapController {
                 var field = gridMap.getField(new Vector(x, y));
                 GridPane.setHalignment(label, HPos.CENTER);
                 if (field.isPresent()) {
-                    label.textProperty().bind(field.get().turtleStringProperty());
+                    label.labelForProperty().bind(field.get().fieldRepresentationProperty());
+                    label.graphicProperty().bind(field.get().fieldRepresentationProperty());
                     mapPane.add(label, x, mapSize.getYCoordinate() - y);
                 }
             }
