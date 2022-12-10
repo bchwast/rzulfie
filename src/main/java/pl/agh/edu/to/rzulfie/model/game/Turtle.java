@@ -34,4 +34,9 @@ public class Turtle {
     public Rectangle getGraphicalRepresentation() {
         return color.toImage();
     }
+
+    @Override
+    public String toString() {
+        return color + " - " + owner;
+    }
 }

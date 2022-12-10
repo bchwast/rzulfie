@@ -69,6 +69,12 @@ public class ApplicationController {
         this.gameResultService = gameResultService;
     }
 
+    @FXML
+    public void initialize() {
+        initializeStartingState();
+        initializeBindings();
+    }
+
     public void startButtonClicked() {
         int playersAmount = numberOfPlayersComboBox.getValue();
         gameState = new GameState(playersAmount);
@@ -104,7 +110,7 @@ public class ApplicationController {
         gameState.nextPlayer();
     }
 
-    public void initializeStartingState() {
+    private void initializeStartingState() {
         ObservableList<GameResult> tableData = FXCollections.observableArrayList(gameResultService.getAllResults());
         dateColumn.setCellValueFactory(dataValue -> new SimpleObjectProperty<>(dataValue.getValue().getGameDate()));
         winnerColumn.setCellValueFactory(dataValue -> new SimpleStringProperty(dataValue.getValue().getWinnerName()));
@@ -113,7 +119,9 @@ public class ApplicationController {
         numberOfPlayersComboBox.getItems().clear();
         numberOfPlayersComboBox.getItems().addAll(IntStream.rangeClosed(1, 6).boxed().toList());
         turtleComboBox.setItems(FXCollections.emptyObservableList());
+    }
 
+    private void initializeBindings() {
         startButton.disableProperty().bind(numberOfPlayersComboBox.valueProperty().isNull());
         moveRightButton.disableProperty().bind(turtleComboBox.valueProperty().isNull());
         moveLeftButton.disableProperty().bind(turtleComboBox.valueProperty().isNull());
