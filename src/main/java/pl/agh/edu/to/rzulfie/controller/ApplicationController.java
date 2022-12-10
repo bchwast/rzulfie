@@ -89,8 +89,6 @@ public class ApplicationController {
         // add turtles to the map
         gridMap.spawnTurtlesOnMap(gameState.getTurtles());
 
-        moveLeftButton.disableProperty().set(false);
-        moveRightButton.disableProperty().set(false);
         winner.visibleProperty().set(false);
     }
 
@@ -113,16 +111,17 @@ public class ApplicationController {
 
         numberOfPlayersComboBox.getItems().clear();
         numberOfPlayersComboBox.getItems().addAll(IntStream.rangeClosed(1, 6).boxed().toList());
+        turtleComboBox.setItems(FXCollections.emptyObservableList());
 
         startButton.disableProperty().bind(numberOfPlayersComboBox.valueProperty().isNull());
+        moveLeftButton.disableProperty().bind(turtleComboBox.valueProperty().isNull());
+        moveRightButton.disableProperty().bind(turtleComboBox.valueProperty().isNull());
     }
 
     private void checkGameOver() {
         Optional<Turtle> winningTurtle = gridMap.getWinner();
         boolean isFinished = gameState.handleWinner(winningTurtle);
         if (isFinished) {
-            moveLeftButton.disableProperty().set(true);
-            moveRightButton.disableProperty().set(true);
             winner.visibleProperty().set(true);
             gameResultService.addResult(new GameResult(gameState.getWinner().getName(), Date.from(Instant.now())));
             initializeStartingState();

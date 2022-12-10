@@ -36,10 +36,10 @@ public class GridMap {
         return new GridMap(map, size, finish);
     }
 
-    public MapField getFieldWithTurtle(Turtle turtle) {
+    public Optional<MapField> getFieldWithTurtle(Turtle turtle) {
         return fieldsByPosition.values().stream()
                 .filter(mapField -> mapField.hasTurtle(turtle))
-                .findFirst().orElseThrow(() -> new IllegalStateException("No such turtle on map"));
+                .findFirst();
     }
 
     public Vector getMapSize() {
@@ -59,13 +59,15 @@ public class GridMap {
     }
 
     public void makeMove(Turtle turtle, Move move) {
-        MapField source = getFieldWithTurtle(turtle);
-        Vector sourcePosition = source.getPosition();
-        Vector destinationPosition = sourcePosition.add(move.toVector());
-        MapField destination = getField(destinationPosition)
-                .orElseThrow(() -> new IllegalStateException("No such field on map"));
-        List<Turtle> popped = source.popTurtlesAboveTurtle(turtle);
-        destination.addTurtlesOnTop(popped);
+        Optional<MapField> sourceOptional = getFieldWithTurtle(turtle);
+        sourceOptional.ifPresent(source -> {
+            Vector sourcePosition = source.getPosition();
+            Vector destinationPosition = sourcePosition.add(move.toVector());
+            MapField destination = getField(destinationPosition)
+                    .orElseThrow(() -> new IllegalStateException("No such field on map"));
+            List<Turtle> popped = source.popTurtlesAboveTurtle(turtle);
+            destination.addTurtlesOnTop(popped);
+        });
     }
 
     public void spawnTurtlesOnMap(List<Turtle> turtles) {
@@ -75,7 +77,7 @@ public class GridMap {
 
     public Optional<Turtle> getWinner() {
         MapField metaMapField = getField(getFinishPosition()).orElseThrow(
-                () -> new IllegalStateException("MetaField was not initialized"));
+                () -> new IllegalStateException("Finish field was not initialized"));
 
         return metaMapField.getUpperMostTurtle();
     }
