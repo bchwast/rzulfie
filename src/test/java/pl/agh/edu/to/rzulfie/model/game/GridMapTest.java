@@ -34,7 +34,7 @@ class GridMapTest {
     @Test
     void shouldMakeMoveUp() {
         //given
-        GridMap gridMap = new GridMap(mapFieldByVector, mock(Vector.class), mock(Vector.class));
+        GridMap gridMap = new GridMap(mapFieldByVector, mock(Vector.class), mock(Vector.class), mock(Vector.class));
 
         //when
         gridMap.makeMove(turtle, Move.UP);
@@ -55,12 +55,13 @@ class GridMapTest {
         assertThat(gridMap.getField(new Vector(5, 6)).get()
                 .fieldRepresentationProperty().get().getChildren())
                 .isEqualTo(List.of(turtle.getGraphicalRepresentation()));
+        assertThat(turtle.getPosition()).isEqualTo(new Vector(5, 6));
     }
 
     @Test
     void shouldMakeMoveDown() {
         //given
-        GridMap gridMap = new GridMap(mapFieldByVector, mock(Vector.class), mock(Vector.class));
+        GridMap gridMap = new GridMap(mapFieldByVector, mock(Vector.class), mock(Vector.class), mock(Vector.class));
 
         //when
         gridMap.makeMove(turtle, Move.DOWN);
@@ -81,12 +82,13 @@ class GridMapTest {
         assertThat(gridMap.getField(new Vector(5, 6)).get()
                 .fieldRepresentationProperty().get().getChildren())
                 .isEqualTo(emptyList());
+        assertThat(turtle.getPosition()).isEqualTo(new Vector(5, 4));
     }
 
     @Test
     void shouldMakeMoveLeft() {
         //given
-        GridMap gridMap = new GridMap(mapFieldByVector, mock(Vector.class), mock(Vector.class));
+        GridMap gridMap = new GridMap(mapFieldByVector, mock(Vector.class), mock(Vector.class), mock(Vector.class));
 
         //when
         gridMap.makeMove(turtle, Move.LEFT);
@@ -107,12 +109,13 @@ class GridMapTest {
         assertThat(gridMap.getField(new Vector(5, 6)).get()
                 .fieldRepresentationProperty().get().getChildren())
                 .isEqualTo(emptyList());
+        assertThat(turtle.getPosition()).isEqualTo(new Vector(4, 5));
     }
 
     @Test
     void shouldMakeMoveRight() {
         //given
-        GridMap gridMap = new GridMap(mapFieldByVector, mock(Vector.class), mock(Vector.class));
+        GridMap gridMap = new GridMap(mapFieldByVector, mock(Vector.class), mock(Vector.class), mock(Vector.class));
 
         //when
         gridMap.makeMove(turtle, Move.RIGHT);
@@ -133,5 +136,6 @@ class GridMapTest {
         assertThat(gridMap.getField(new Vector(5, 6)).get()
                 .fieldRepresentationProperty().get().getChildren())
                 .isEqualTo(emptyList());
+        assertThat(turtle.getPosition()).isEqualTo(new Vector(6, 5));
     }
 }

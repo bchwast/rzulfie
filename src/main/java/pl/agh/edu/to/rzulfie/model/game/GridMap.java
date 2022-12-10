@@ -10,18 +10,20 @@ public class GridMap {
 
     private final Map<Vector, MapField> fieldsByPosition;
     private final Vector mapSize;
-    private final Vector startPosition = new Vector(0, 0);
+    private final Vector startPosition;
     private final Vector finishPosition;
 
-    public GridMap(Map<Vector, MapField> fieldsByPosition, Vector mapSize, Vector finishPosition) {
+    public GridMap(Map<Vector, MapField> fieldsByPosition, Vector mapSize, Vector finishPosition,
+            Vector startPosition) {
         this.fieldsByPosition = fieldsByPosition;
         this.mapSize = mapSize;
         this.finishPosition = finishPosition;
+        this.startPosition = startPosition;
     }
 
     public static GridMap generateStraightLineGridMap() {
-        Vector start = new Vector(0,0);
-        Vector finish = new Vector(15,0);
+        Vector start = new Vector(0, 0);
+        Vector finish = new Vector(15, 0);
         Vector size = new Vector(15, 0);
 
         Map<Vector, MapField> map = new HashMap<>();
@@ -33,13 +35,7 @@ public class GridMap {
             }
         }
 
-        return new GridMap(map, size, finish);
-    }
-
-    public Optional<MapField> getFieldWithTurtle(Turtle turtle) {
-        return fieldsByPosition.values().stream()
-                .filter(mapField -> mapField.hasTurtle(turtle))
-                .findFirst();
+        return new GridMap(map, size, finish, start);
     }
 
     public Vector getMapSize() {
@@ -52,10 +48,6 @@ public class GridMap {
 
     public Vector getStartPosition() {
         return startPosition;
-    }
-
-    public Vector getFinishPosition() {
-        return finishPosition;
     }
 
     public void makeMove(Turtle turtle, Move move) {
@@ -71,14 +63,19 @@ public class GridMap {
     }
 
     public void spawnTurtlesOnMap(List<Turtle> turtles) {
-        getField(getStartPosition()).orElseThrow(() -> new IllegalStateException("Start position not initialized"))
+        turtles.forEach(turtle -> turtle.setPosition(startPosition));
+        getField(startPosition).orElseThrow(() -> new IllegalStateException("Start position not initialized"))
                 .addTurtlesOnTop(turtles);
     }
 
     public Optional<Turtle> getWinner() {
-        MapField metaMapField = getField(getFinishPosition()).orElseThrow(
+        MapField metaMapField = getField(finishPosition).orElseThrow(
                 () -> new IllegalStateException("Finish field was not initialized"));
 
         return metaMapField.getUpperMostTurtle();
+    }
+
+    private Optional<MapField> getFieldWithTurtle(Turtle turtle) {
+        return Optional.ofNullable(fieldsByPosition.get(turtle.getPosition()));
     }
 }

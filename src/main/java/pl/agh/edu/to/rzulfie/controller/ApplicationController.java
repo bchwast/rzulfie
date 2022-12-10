@@ -78,7 +78,8 @@ public class ApplicationController {
 
         // set combo box items to turtles
         turtleComboBox.setItems(FXCollections.observableList(gameState.getTurtles()));
-        gameState.currentTurtleSelector().bind(turtleComboBox.selectionModelProperty());
+        turtleComboBox.getSelectionModel().select(0);
+        gameState.currentTurtleProperty().bind(turtleComboBox.valueProperty());
 
         // bind current player label to current player
         // bind winner text to winning player
@@ -114,8 +115,15 @@ public class ApplicationController {
         turtleComboBox.setItems(FXCollections.emptyObservableList());
 
         startButton.disableProperty().bind(numberOfPlayersComboBox.valueProperty().isNull());
-        moveLeftButton.disableProperty().bind(turtleComboBox.valueProperty().isNull());
         moveRightButton.disableProperty().bind(turtleComboBox.valueProperty().isNull());
+        moveLeftButton.disableProperty().bind(turtleComboBox.valueProperty().isNull());
+
+        turtleComboBox.valueProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                moveLeftButton.disableProperty()
+                        .bind(newValue.positionProperty().isEqualTo(gridMap.getStartPosition()));
+            }
+        }));
     }
 
     private void checkGameOver() {
