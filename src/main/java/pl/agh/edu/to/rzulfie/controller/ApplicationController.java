@@ -129,7 +129,8 @@ public class ApplicationController {
         turtleComboBox.valueProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 moveLeftButton.disableProperty()
-                        .bind(newValue.positionProperty().isEqualTo(gridMap.getStartPosition()));
+                        .bind(newValue.positionProperty().isEqualTo(gridMap.getStartPosition())
+                                .or(turtleComboBox.valueProperty().isNull()));
             }
         }));
     }
