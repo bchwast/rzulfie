@@ -69,6 +69,12 @@ public class ApplicationController {
         this.gameResultService = gameResultService;
     }
 
+    @FXML
+    public void initialize() {
+        initializeStartingState();
+        initializeBindings();
+    }
+
     public void startButtonClicked() {
         int playersAmount = numberOfPlayersComboBox.getValue();
         gameState = new GameState(playersAmount);
@@ -78,7 +84,8 @@ public class ApplicationController {
 
         // set combo box items to turtles
         turtleComboBox.setItems(FXCollections.observableList(gameState.getTurtles()));
-        gameState.currentTurtleSelector().bind(turtleComboBox.selectionModelProperty());
+        turtleComboBox.getSelectionModel().select(0);
+        gameState.currentTurtleProperty().bind(turtleComboBox.valueProperty());
 
         // bind current player label to current player
         // bind winner text to winning player
@@ -103,7 +110,7 @@ public class ApplicationController {
         gameState.nextPlayer();
     }
 
-    public void initializeStartingState() {
+    private void initializeStartingState() {
         ObservableList<GameResult> tableData = FXCollections.observableArrayList(gameResultService.getAllResults());
         dateColumn.setCellValueFactory(dataValue -> new SimpleObjectProperty<>(dataValue.getValue().getGameDate()));
         winnerColumn.setCellValueFactory(dataValue -> new SimpleStringProperty(dataValue.getValue().getWinnerName()));
@@ -112,10 +119,20 @@ public class ApplicationController {
         numberOfPlayersComboBox.getItems().clear();
         numberOfPlayersComboBox.getItems().addAll(IntStream.rangeClosed(1, 6).boxed().toList());
         turtleComboBox.setItems(FXCollections.emptyObservableList());
+    }
 
+    private void initializeBindings() {
         startButton.disableProperty().bind(numberOfPlayersComboBox.valueProperty().isNull());
-        moveLeftButton.disableProperty().bind(turtleComboBox.valueProperty().isNull());
         moveRightButton.disableProperty().bind(turtleComboBox.valueProperty().isNull());
+        moveLeftButton.disableProperty().bind(turtleComboBox.valueProperty().isNull());
+
+        turtleComboBox.valueProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                moveLeftButton.disableProperty()
+                        .bind(newValue.positionProperty().isEqualTo(gridMap.getStartPosition())
+                                .or(turtleComboBox.valueProperty().isNull()));
+            }
+        }));
     }
 
     private void checkGameOver() {

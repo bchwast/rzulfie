@@ -21,6 +21,7 @@ public class MapField {
         this.turtles = turtles;
         this.position = position;
         this.fieldRepresentationProperty = new SimpleObjectProperty<>();
+        turtles.forEach(turtle -> turtle.setPosition(position));
         recalculateFieldRepresentationProperty();
     }
 
@@ -32,6 +33,7 @@ public class MapField {
     }
 
     public void addTurtlesOnTop(List<Turtle> newTurtles) {
+        newTurtles.forEach(turtle -> turtle.setPosition(position));
         turtles = Stream.concat(turtles.stream(), newTurtles.stream()).toList();
         recalculateFieldRepresentationProperty();
     }
@@ -42,10 +44,6 @@ public class MapField {
 
     public ObjectProperty<FlowPane> fieldRepresentationProperty() {
         return fieldRepresentationProperty;
-    }
-
-    public boolean hasTurtle(Turtle turtle) {
-        return turtles.contains(turtle);
     }
 
     public Optional<Turtle> getUpperMostTurtle() {

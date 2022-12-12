@@ -8,7 +8,6 @@ import javafx.stage.Stage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import pl.agh.edu.to.rzulfie.controller.ApplicationController;
 
 import java.io.IOException;
 
@@ -41,11 +40,6 @@ public class RzulfieApplication extends Application {
             loader.setControllerFactory(context::getBean);
             BorderPane rootLayout = loader.load();
 
-            // set initial data into controller
-            ApplicationController applicationController = loader.getController();
-            applicationController.initializeStartingState();
-
-            // add layout to a scene and show them all
             configureStage(primaryStage, rootLayout);
             primaryStage.show();
         } catch (IOException e) {

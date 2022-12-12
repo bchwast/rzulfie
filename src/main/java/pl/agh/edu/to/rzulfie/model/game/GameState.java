@@ -2,7 +2,6 @@ package pl.agh.edu.to.rzulfie.model.game;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.control.SingleSelectionModel;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +10,7 @@ import java.util.stream.IntStream;
 public class GameState {
 
     private final ObjectProperty<Player> currentPlayer;
-    private final ObjectProperty<SingleSelectionModel<Turtle>> currentTurtleSelector;
+    private final ObjectProperty<Turtle> currentTurtle;
     private final ObjectProperty<Player> winner;
     private final List<Player> players;
     private final List<Turtle> turtles;
@@ -25,17 +24,7 @@ public class GameState {
                 .toList();
         this.currentPlayer = new SimpleObjectProperty<>(players.get(0));
         this.winner = new SimpleObjectProperty<>();
-        this.currentTurtleSelector = new SimpleObjectProperty<>(new SingleSelectionModel<>() {
-            @Override
-            protected Turtle getModelItem(int index) {
-                return turtles.get(index);
-            }
-
-            @Override
-            protected int getItemCount() {
-                return turtles.size();
-            }
-        });
+        this.currentTurtle = new SimpleObjectProperty<>();
     }
 
     public ObjectProperty<Player> currentPlayerProperty() {
@@ -55,12 +44,12 @@ public class GameState {
         currentPlayer.set(players.get((index + 1) % players.size()));
     }
 
-    public ObjectProperty<SingleSelectionModel<Turtle>> currentTurtleSelector() {
-        return currentTurtleSelector;
+    public ObjectProperty<Turtle> currentTurtleProperty() {
+        return currentTurtle;
     }
 
     public Turtle getCurrentTurtle() {
-        return currentTurtleSelector.get().getSelectedItem();
+        return currentTurtle.get();
     }
 
     public List<Turtle> getTurtles() {
