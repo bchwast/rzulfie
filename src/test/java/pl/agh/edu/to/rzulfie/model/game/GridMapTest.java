@@ -2,6 +2,12 @@ package pl.agh.edu.to.rzulfie.model.game;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import pl.agh.edu.to.rzulfie.model.game.map.GridMap;
+import pl.agh.edu.to.rzulfie.model.game.map.MapField;
+import pl.agh.edu.to.rzulfie.model.game.turtle.Color;
+import pl.agh.edu.to.rzulfie.model.game.turtle.Move;
+import pl.agh.edu.to.rzulfie.model.game.turtle.Turtle;
+import pl.agh.edu.to.rzulfie.model.game.utils.Vector;
 
 import java.util.List;
 import java.util.Map;

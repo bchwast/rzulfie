@@ -1,4 +1,6 @@
-package pl.agh.edu.to.rzulfie.model.game;
+package pl.agh.edu.to.rzulfie.model.game.turtle;
+
+import pl.agh.edu.to.rzulfie.model.game.utils.Vector;
 
 public enum Move {
     LEFT,

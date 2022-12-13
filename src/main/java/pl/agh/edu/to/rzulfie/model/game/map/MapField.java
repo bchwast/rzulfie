@@ -1,9 +1,11 @@
-package pl.agh.edu.to.rzulfie.model.game;
+package pl.agh.edu.to.rzulfie.model.game.map;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Orientation;
 import javafx.scene.layout.FlowPane;
+import pl.agh.edu.to.rzulfie.model.game.turtle.Turtle;
+import pl.agh.edu.to.rzulfie.model.game.utils.Vector;
 
 import java.util.ArrayList;
 import java.util.Collections;

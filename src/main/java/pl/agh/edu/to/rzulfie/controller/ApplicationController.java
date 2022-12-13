@@ -19,10 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.agh.edu.to.rzulfie.model.GameResult;
 import pl.agh.edu.to.rzulfie.model.game.GameState;
-import pl.agh.edu.to.rzulfie.model.game.GridMap;
-import pl.agh.edu.to.rzulfie.model.game.Move;
-import pl.agh.edu.to.rzulfie.model.game.Turtle;
-import pl.agh.edu.to.rzulfie.model.game.Vector;
+import pl.agh.edu.to.rzulfie.model.game.map.GridMap;
+import pl.agh.edu.to.rzulfie.model.game.turtle.Move;
+import pl.agh.edu.to.rzulfie.model.game.turtle.Turtle;
+import pl.agh.edu.to.rzulfie.model.game.utils.Vector;
 import pl.agh.edu.to.rzulfie.model.service.GameResultService;
 
 import java.time.Instant;
