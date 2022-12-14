@@ -33,12 +33,14 @@ public class MapCreator {
     public void markAsStartField(Vector position) {
         if(fieldsByPosition.containsKey(position)){
             this.startPosition = position;
+            fieldsByPosition.get(position).setAsStart();
         }
     }
 
     public void markAsFinishField(Vector position) {
         if(fieldsByPosition.containsKey(position)){
             this.finishPosition = position;
+            fieldsByPosition.get(position).setAsFinish();
         }
     }
 

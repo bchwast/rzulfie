@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.agh.edu.to.rzulfie.model.GameResult;
 import pl.agh.edu.to.rzulfie.model.game.GameState;
+import pl.agh.edu.to.rzulfie.model.game.map.EmptyCell;
 import pl.agh.edu.to.rzulfie.model.game.map.GridMap;
 import pl.agh.edu.to.rzulfie.model.game.turtle.Move;
 import pl.agh.edu.to.rzulfie.model.game.turtle.Turtle;
@@ -33,7 +34,7 @@ import java.util.stream.IntStream;
 @Component
 public class ApplicationController {
 
-    private static final double CELL_SIZE = 60;
+    public static final double CELL_SIZE = 60;
 
     @FXML
     private ComboBox<Turtle> turtleComboBox;
@@ -78,7 +79,7 @@ public class ApplicationController {
     public void startButtonClicked() {
         int playersAmount = numberOfPlayersComboBox.getValue();
         gameState = new GameState(playersAmount);
-        gridMap = GridMap.generateStraightLineGridMap();
+        gridMap = GridMap.SampleComplexMap();
         initializeMap();
         printPlayers();
 
@@ -171,6 +172,9 @@ public class ApplicationController {
                 if (field.isPresent()) {
                     label.labelForProperty().bind(field.get().fieldRepresentationProperty());
                     label.graphicProperty().bind(field.get().fieldRepresentationProperty());
+                    mapPane.add(label, x, mapSize.getYCoordinate() - y);
+                }else{
+                    label.graphicProperty().bind(new EmptyCell().fieldRepresentationProperty());
                     mapPane.add(label, x, mapSize.getYCoordinate() - y);
                 }
             }

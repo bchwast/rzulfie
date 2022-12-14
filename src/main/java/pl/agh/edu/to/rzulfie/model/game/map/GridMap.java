@@ -25,23 +25,6 @@ public class GridMap {
         this.startPosition = startPosition;
     }
 
-    public static GridMap generateStraightLineGridMap() {
-        Vector start = new Vector(0, 0);
-        Vector finish = new Vector(15, 0);
-        Vector size = new Vector(15, 0);
-
-        Map<Vector, MapField> map = new HashMap<>();
-
-        for (int x = start.getXCoordinate(); x <= size.getXCoordinate(); x++) {
-            for (int y = start.getYCoordinate(); y <= size.getYCoordinate(); y++) {
-                Vector position = new Vector(x, y);
-                map.put(position, new MapField(Collections.emptyList(), position));
-            }
-        }
-
-        return new GridMap(map, size, finish, start);
-    }
-
     public Vector getMapSize() {
         return mapSize;
     }
@@ -84,21 +67,42 @@ public class GridMap {
     }
 
     public static GridMap SampleSimpleMap(){
-        int mapSize = 10;
-        MapCreator mapCreator = new MapCreator(new Vector(mapSize,mapSize));
+        int mapLength = 10;
+        MapCreator mapCreator = new MapCreator(new Vector(mapLength,0));
 
-        for (int x = 0; x < mapSize; x++) {
+        for (int x = 0; x < mapLength; x++) {
             mapCreator.addMapField(new Vector(x,0));
         }
         mapCreator.markAsStartField(new Vector(0,0));
-        mapCreator.markAsFinishField(new Vector(mapSize-1,0));
+        mapCreator.markAsFinishField(new Vector(mapLength-1,0));
 
         return mapCreator.create();
     }
 
     public static GridMap SampleComplexMap(){
         MapCreator mapCreator = new MapCreator(new Vector(10,10));
-//        todo fill it
+
+        mapCreator.addMapField(new Vector(2,5));
+        mapCreator.markAsStartField(new Vector(2,5));
+
+//      'main' way
+        mapCreator.addMapField(new Vector(3,5));
+        mapCreator.addMapField(new Vector(4,5));
+        mapCreator.addMapField(new Vector(5,5));
+        mapCreator.addMapField(new Vector(6,5));
+        mapCreator.addMapField(new Vector(7,5));
+        mapCreator.addMapField(new Vector(7,4));
+        mapCreator.addMapField(new Vector(7,3));
+        mapCreator.addMapField(new Vector(7,2));
+
+//        shortcut
+        mapCreator.addMapField(new Vector(5,4));
+        mapCreator.addMapField(new Vector(5,3));
+        mapCreator.addMapField(new Vector(5,2));
+
+        mapCreator.addMapField(new Vector(6,2));
+        mapCreator.markAsFinishField(new Vector(6,2));
+
 
         return mapCreator.create();
     }
