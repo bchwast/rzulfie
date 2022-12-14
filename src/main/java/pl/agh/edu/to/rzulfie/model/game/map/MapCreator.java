@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MapCreator {
-    private Map<Vector, MapField> fieldsByPosition = new HashMap<>();
+    private final Map<Vector, MapField> fieldsByPosition = new HashMap<>();
     private final Vector mapSize;
     private Vector startPosition = null;
     private Vector finishPosition = null;
@@ -28,10 +28,6 @@ public class MapCreator {
     public void addMapField(Vector position) {
         MapField mapField = new MapField(Collections.emptyList(),position);
         fieldsByPosition.put(position,mapField);
-    }
-
-    public void connectMapFields(Vector positionA, Vector positionB) {
-
     }
 
     public void markAsStartField(Vector position) {
