@@ -82,4 +82,24 @@ public class GridMap {
     private Optional<MapField> getFieldWithTurtle(Turtle turtle) {
         return Optional.ofNullable(fieldsByPosition.get(turtle.getPosition()));
     }
+
+    public static GridMap SampleSimpleMap(){
+        int mapSize = 10;
+        MapCreator mapCreator = new MapCreator(new Vector(mapSize,mapSize));
+
+        for (int x = 0; x < mapSize; x++) {
+            mapCreator.addMapField(new Vector(x,0));
+        }
+        mapCreator.markAsStartField(new Vector(0,0));
+        mapCreator.markAsFinishField(new Vector(mapSize-1,0));
+
+        return mapCreator.create();
+    }
+
+    public static GridMap SampleComplexMap(){
+        MapCreator mapCreator = new MapCreator(new Vector(10,10));
+//        todo fill it
+
+        return mapCreator.create();
+    }
 }
