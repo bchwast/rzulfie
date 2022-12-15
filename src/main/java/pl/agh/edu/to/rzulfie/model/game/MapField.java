@@ -16,6 +16,7 @@ public class MapField {
     private List<Turtle> turtles;
     private final ObjectProperty<FlowPane> fieldRepresentationProperty;
     private final Vector position;
+    private final List<Move> possibleMoves = new ArrayList<>();
 
     public MapField(List<Turtle> turtles, Vector position) {
         this.turtles = turtles;
@@ -23,6 +24,10 @@ public class MapField {
         this.fieldRepresentationProperty = new SimpleObjectProperty<>();
         turtles.forEach(turtle -> turtle.setPosition(position));
         recalculateFieldRepresentationProperty();
+    }
+
+    public void addMove(Move move) {
+        possibleMoves.add(move);
     }
 
     public List<Turtle> popTurtlesAboveTurtle(Turtle turtle) {
@@ -52,6 +57,10 @@ public class MapField {
         } else {
             return Optional.of(turtles.get(turtles.size() - 1));
         }
+    }
+
+    public List<Move> getPossibleMoves() {
+        return possibleMoves;
     }
 
     private void recalculateFieldRepresentationProperty() {

@@ -49,8 +49,6 @@
                 <Label text="Select turtle:"/>
                 <ComboBox fx:id="turtleComboBox"/>
             </HBox>
-            <Button fx:id="moveLeftButton" text="Move left" onAction="#moveLeftButtonClicked"/>
-            <Button fx:id="moveRightButton" text="Move right" onAction="#moveRightButtonClicked"/>
             <Label text="Winner:" prefWidth="100"/>
             <Text fx:id="winner"/>
         </HBox>
