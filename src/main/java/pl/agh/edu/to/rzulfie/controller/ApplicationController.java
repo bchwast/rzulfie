@@ -151,7 +151,6 @@ public class ApplicationController {
         mapPane.setGridLinesVisible(false);
         mapPane.getColumnConstraints().clear();
         mapPane.getRowConstraints().clear();
-
         mapPane.setGridLinesVisible(true);
         Vector mapSize = gridMap.getMapSize();
 

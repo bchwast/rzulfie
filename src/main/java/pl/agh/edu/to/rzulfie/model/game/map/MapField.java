@@ -3,6 +3,7 @@ package pl.agh.edu.to.rzulfie.model.game.map;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import pl.agh.edu.to.rzulfie.model.game.turtle.Turtle;
@@ -61,20 +62,32 @@ public class MapField {
         }
     }
 
-    private void markAsStart(FlowPane flowPane) {
-        addBorder(flowPane, Color.GREEN);
+    private void addBackgroundWithBorder(Color color){
+        FlowPane background = new FlowPane(Orientation.VERTICAL, 0, 0);
+        background.setPrefWidth(CELL_SIZE);
+        background.setPrefHeight(CELL_SIZE);
+        addBorder(background, color);
+
+        fieldRepresentationProperty.set(background);
+    }
+
+    private void markAsStart() {
+        addBackgroundWithBorder(Color.GREEN);
     }
 
     public void setAsStart() {
         this.isStart = true;
+        recalculateFieldRepresentationProperty();
     }
 
-    private void markAsFinish(FlowPane flowPane) {
-        addBorder(flowPane, Color.RED);
+    private void markAsFinish() {
+        addBackgroundWithBorder(Color.RED);
+        System.out.println("hereeee");
     }
 
     public void setAsFinish() {
         this.isFinish = true;
+        recalculateFieldRepresentationProperty();
     }
 
     private void addBorder(FlowPane flowPane, Color color) {
@@ -92,18 +105,25 @@ public class MapField {
     }
 
     private void recalculateFieldRepresentationProperty() {
-        FlowPane flowPane = new FlowPane(Orientation.VERTICAL, 0, 0);
-        if (isStart) {
-            markAsStart(flowPane);
-        } else if (isFinish) {
-            markAsFinish(flowPane);
+        if(isStart){
+            markAsStart();
+        }
+        else if(isFinish){
+            markAsFinish();
         }
 
+        FlowPane flowPane = new FlowPane(Orientation.VERTICAL, 0, 1);
         List<Turtle> turtlesCopy = new ArrayList<>(turtles);
         Collections.reverse(turtlesCopy);
         turtlesCopy.forEach(turtle -> flowPane.getChildren().add(turtle.getGraphicalRepresentation()));
         flowPane.setPrefWrapLength(CELL_SIZE);
+        flowPane.setPrefWidth(CELL_SIZE);
+        flowPane.setAlignment(Pos.CENTER);
 
-        fieldRepresentationProperty.set(flowPane);
+        if(isStart || isFinish){
+            fieldRepresentationProperty.get().getChildren().add(flowPane);
+        }else{
+            fieldRepresentationProperty.set(flowPane);
+        }
     }
 }
