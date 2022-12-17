@@ -35,6 +35,15 @@ public class GridMap {
             }
         }
 
+        map.values().forEach(mapField -> {
+            if (!mapField.getPosition().equals(start)) {
+                mapField.addMove(Move.LEFT);
+            }
+            if (!mapField.getPosition().equals(finish)) {
+                mapField.addMove(Move.RIGHT);
+            }
+        });
+
         return new GridMap(map, size, finish, start);
     }
 
@@ -46,16 +55,10 @@ public class GridMap {
         return Optional.ofNullable(fieldsByPosition.get(position));
     }
 
-    public Vector getStartPosition() {
-        return startPosition;
-    }
-
-    public void makeMove(Turtle turtle, Move move) {
+    public void makeMove(Turtle turtle, Vector desiredPosition) {
         Optional<MapField> sourceOptional = getFieldWithTurtle(turtle);
         sourceOptional.ifPresent(source -> {
-            Vector sourcePosition = source.getPosition();
-            Vector destinationPosition = sourcePosition.add(move.toVector());
-            MapField destination = getField(destinationPosition)
+            MapField destination = getField(desiredPosition)
                     .orElseThrow(() -> new IllegalStateException("No such field on map"));
             List<Turtle> popped = source.popTurtlesAboveTurtle(turtle);
             destination.addTurtlesOnTop(popped);
@@ -75,7 +78,7 @@ public class GridMap {
         return metaMapField.getUpperMostTurtle();
     }
 
-    private Optional<MapField> getFieldWithTurtle(Turtle turtle) {
+    public Optional<MapField> getFieldWithTurtle(Turtle turtle) {
         return Optional.ofNullable(fieldsByPosition.get(turtle.getPosition()));
     }
 }

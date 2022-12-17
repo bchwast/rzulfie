@@ -18,6 +18,7 @@ public class MapField {
     private Optional<Fruit> fruit;
     private final ObjectProperty<FlowPane> fieldRepresentationProperty;
     private final Vector position;
+    private final List<Move> possibleMoves = new ArrayList<>();
 
     private boolean wasVisited;
 
@@ -39,6 +40,10 @@ public class MapField {
         recalculateFieldRepresentationProperty();
         this.fruit = Optional.of(fruit);
         this.wasVisited = false;
+    }
+
+    public void addMove(Move move) {
+        possibleMoves.add(move);
     }
 
     public List<Turtle> popTurtlesAboveTurtle(Turtle turtle) {
@@ -84,6 +89,10 @@ public class MapField {
 
     public Optional<Fruit> getFruit() {
         return fruit;
+    }
+
+    public List<Move> getPossibleMoves() {
+        return possibleMoves;
     }
 
     private void recalculateFieldRepresentationProperty() {
