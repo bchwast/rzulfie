@@ -17,15 +17,18 @@ public class GameResult {
     private int id;
     private String winnerName;
 
+    private int score;
+
     @Temporal(TemporalType.DATE)
     private Date gameDate;
 
     public GameResult() {
     }
 
-    public GameResult(String winnerName, Date gameDate) {
+    public GameResult(String winnerName, Date gameDate, int score) {
         this.winnerName = winnerName;
         this.gameDate = gameDate;
+        this.score = score;
     }
 
     public int getId() {
@@ -50,5 +53,13 @@ public class GameResult {
 
     public void setGameDate(Date gameDate) {
         this.gameDate = gameDate;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }
