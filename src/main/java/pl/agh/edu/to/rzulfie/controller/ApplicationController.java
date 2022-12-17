@@ -140,7 +140,13 @@ public class ApplicationController {
         boolean isFinished = gameState.handleWinner(winningTurtle);
         if (isFinished) {
             winner.visibleProperty().set(true);
-            gameResultService.addResult(new GameResult(gameState.getWinner().getName(), Date.from(Instant.now())));
+            gameResultService.addResult(
+                    new GameResult(
+                            gameState.getWinner().getName(),
+                            Date.from(Instant.now()),
+                            gameState.getWinner().getScore()
+                    )
+            );
             initializeStartingState();
         }
     }

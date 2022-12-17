@@ -14,8 +14,12 @@ import java.util.stream.Stream;
 public class MapField {
 
     private List<Turtle> turtles;
+
+    private Optional<Fruit> fruit;
     private final ObjectProperty<FlowPane> fieldRepresentationProperty;
     private final Vector position;
+
+    private boolean wasVisited;
 
     public MapField(List<Turtle> turtles, Vector position) {
         this.turtles = turtles;
@@ -23,6 +27,18 @@ public class MapField {
         this.fieldRepresentationProperty = new SimpleObjectProperty<>();
         turtles.forEach(turtle -> turtle.setPosition(position));
         recalculateFieldRepresentationProperty();
+        this.fruit = Optional.empty();
+        this.wasVisited = false;
+    }
+
+    public MapField(List<Turtle> turtles, Vector position, Fruit fruit) {
+        this.turtles = turtles;
+        this.position = position;
+        this.fieldRepresentationProperty = new SimpleObjectProperty<>();
+        turtles.forEach(turtle -> turtle.setPosition(position));
+        recalculateFieldRepresentationProperty();
+        this.fruit = Optional.of(fruit);
+        this.wasVisited = false;
     }
 
     public List<Turtle> popTurtlesAboveTurtle(Turtle turtle) {
@@ -32,7 +48,19 @@ public class MapField {
         return movedTurtles;
     }
 
+    private void handleTurtleEatingFruit(List<Turtle> turtles) {
+        var firstTurtle = turtles.get(0);
+        fruit.ifPresent(fruit -> firstTurtle.getOwner().eatFruit(fruit));
+        fruit = Optional.empty();
+        // TODO: hide fruit from map
+    }
+
     public void addTurtlesOnTop(List<Turtle> newTurtles) {
+        if (!wasVisited) {
+            handleTurtleEatingFruit(newTurtles);
+        }
+        this.wasVisited = true;
+
         newTurtles.forEach(turtle -> turtle.setPosition(position));
         turtles = Stream.concat(turtles.stream(), newTurtles.stream()).toList();
         recalculateFieldRepresentationProperty();
@@ -52,6 +80,10 @@ public class MapField {
         } else {
             return Optional.of(turtles.get(turtles.size() - 1));
         }
+    }
+
+    public Optional<Fruit> getFruit() {
+        return fruit;
     }
 
     private void recalculateFieldRepresentationProperty() {
