@@ -19,11 +19,7 @@ import javafx.scene.text.Text;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.agh.edu.to.rzulfie.model.GameResult;
-import pl.agh.edu.to.rzulfie.model.game.GameState;
-import pl.agh.edu.to.rzulfie.model.game.GridMap;
-import pl.agh.edu.to.rzulfie.model.game.MapField;
-import pl.agh.edu.to.rzulfie.model.game.Turtle;
-import pl.agh.edu.to.rzulfie.model.game.Vector;
+import pl.agh.edu.to.rzulfie.model.game.*;
 import pl.agh.edu.to.rzulfie.model.service.GameResultService;
 
 import java.time.Instant;
@@ -86,6 +82,11 @@ public class ApplicationController {
         initializeMap();
         printPlayers();
         gridMap.spawnTurtlesOnMap(gameState.getTurtles());
+
+
+//        gridMap.addFruitToMap(new Fruit(123), new Vector(0, 0)); # adding fruit to map
+
+
 
         turtleComboBox.setItems(FXCollections.observableList(gameState.getTurtles()));
         turtleComboBox.getSelectionModel().select(0);

@@ -71,6 +71,10 @@ public class GridMap {
                 .addTurtlesOnTop(turtles);
     }
 
+    public void addFruitToMap(Fruit fruit, Vector position) {
+        getField(position).orElseThrow(() -> new IllegalStateException("No such field on map")).setFruit(fruit);
+    }
+
     public Optional<Turtle> getWinner() {
         MapField metaMapField = getField(finishPosition).orElseThrow(
                 () -> new IllegalStateException("Finish field was not initialized"));

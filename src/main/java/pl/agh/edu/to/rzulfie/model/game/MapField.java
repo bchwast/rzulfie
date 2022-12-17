@@ -91,6 +91,10 @@ public class MapField {
         return fruit;
     }
 
+    public void setFruit(Fruit fruit) {
+        this.fruit = Optional.of(fruit);
+    }
+
     public List<Move> getPossibleMoves() {
         return possibleMoves;
     }
