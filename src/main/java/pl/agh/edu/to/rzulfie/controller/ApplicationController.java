@@ -20,9 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.agh.edu.to.rzulfie.model.GameResult;
 import pl.agh.edu.to.rzulfie.model.game.GameState;
-import pl.agh.edu.to.rzulfie.model.game.map.EmptyCell;
 import pl.agh.edu.to.rzulfie.model.game.map.GridMap;
 import pl.agh.edu.to.rzulfie.model.game.map.MapField;
+import pl.agh.edu.to.rzulfie.model.game.map.UnavailableCell;
 import pl.agh.edu.to.rzulfie.model.game.turtle.Turtle;
 import pl.agh.edu.to.rzulfie.model.game.utils.Vector;
 import pl.agh.edu.to.rzulfie.model.service.GameResultService;
@@ -199,7 +199,7 @@ public class ApplicationController {
                     stackPane.getChildren().addAll(label);
                     mapPane.add(stackPane, x, mapSize.getYCoordinate() - y);
                 } else {
-                    label.graphicProperty().bind(new EmptyCell().fieldRepresentationProperty());
+                    label.graphicProperty().bind(new UnavailableCell().fieldRepresentationProperty());
                     mapPane.add(label, x, mapSize.getYCoordinate() - y);
                 }
             }

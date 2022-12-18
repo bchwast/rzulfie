@@ -9,12 +9,12 @@ import javafx.scene.shape.Rectangle;
 
 import static pl.agh.edu.to.rzulfie.controller.ApplicationController.CELL_SIZE;
 
-public class EmptyCell {
+public class UnavailableCell {
 
     private final Rectangle image;
     private final ObjectProperty<FlowPane> fieldRepresentationProperty;
 
-    public EmptyCell() {
+    public UnavailableCell() {
         this.fieldRepresentationProperty = new SimpleObjectProperty<>();
         this.image = new Rectangle(CELL_SIZE, CELL_SIZE, Color.LIGHTGRAY);
         calculateFieldRepresentationProperty();

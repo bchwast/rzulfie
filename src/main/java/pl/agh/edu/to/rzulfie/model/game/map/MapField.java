@@ -117,7 +117,7 @@ public class MapField {
     }
 
     private void markAsFinish() {
-        addBackgroundWithBorder(Color.RED);
+        addBackgroundWithBorder(Color.LIGHTBLUE);
     }
 
     private void addBorder(FlowPane flowPane, Color color) {
