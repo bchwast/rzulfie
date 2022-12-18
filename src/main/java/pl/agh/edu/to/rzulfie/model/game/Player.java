@@ -1,5 +1,7 @@
 package pl.agh.edu.to.rzulfie.model.game;
 
+import pl.agh.edu.to.rzulfie.model.game.turtle.Fruit;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,6 +29,8 @@ public class Player {
         eatenFruits.add(fruit);
     }
     public int getScore() {
-        return eatenFruits.stream().mapToInt(Fruit::value).sum();
+        return eatenFruits.stream()
+                .mapToInt(Fruit::value)
+                .sum();
     }
 }

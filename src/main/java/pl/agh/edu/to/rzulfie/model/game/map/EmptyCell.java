@@ -10,6 +10,7 @@ import javafx.scene.shape.Rectangle;
 import static pl.agh.edu.to.rzulfie.controller.ApplicationController.CELL_SIZE;
 
 public class EmptyCell {
+
     private final Rectangle image;
     private final ObjectProperty<FlowPane> fieldRepresentationProperty;
 
@@ -17,8 +18,8 @@ public class EmptyCell {
         this.fieldRepresentationProperty = new SimpleObjectProperty<>();
         this.image = new Rectangle(CELL_SIZE, CELL_SIZE, Color.LIGHTGRAY);
         calculateFieldRepresentationProperty();
-
     }
+
     public ObjectProperty<FlowPane> fieldRepresentationProperty() {
         return fieldRepresentationProperty;
     }
@@ -29,6 +30,4 @@ public class EmptyCell {
         flowPane.setPrefWrapLength(60);
         fieldRepresentationProperty.set(flowPane);
     }
-
-
-    }
+}

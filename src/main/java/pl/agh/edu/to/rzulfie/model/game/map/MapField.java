@@ -4,13 +4,21 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.Color;
+import pl.agh.edu.to.rzulfie.model.game.turtle.Fruit;
+import pl.agh.edu.to.rzulfie.model.game.turtle.Move;
 import pl.agh.edu.to.rzulfie.model.game.turtle.Turtle;
 import pl.agh.edu.to.rzulfie.model.game.utils.Vector;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -20,8 +28,10 @@ import static pl.agh.edu.to.rzulfie.controller.ApplicationController.CELL_SIZE;
 public class MapField {
 
     private List<Turtle> turtles;
+    private Optional<Fruit> fruit = Optional.empty();
     private final ObjectProperty<FlowPane> fieldRepresentationProperty;
     private final Vector position;
+    private final List<Move> possibleMoves = new ArrayList<>();
     private boolean isStart = false;
     private boolean isFinish = false;
 
@@ -30,6 +40,19 @@ public class MapField {
         this.position = position;
         this.fieldRepresentationProperty = new SimpleObjectProperty<>();
         turtles.forEach(turtle -> turtle.setPosition(position));
+        recalculateFieldRepresentationProperty();
+    }
+
+    public void addMove(Move move) {
+        possibleMoves.add(move);
+    }
+
+    public List<Move> getPossibleMoves() {
+        return possibleMoves;
+    }
+
+    public void setFruit(Fruit fruit) {
+        this.fruit = Optional.of(fruit);
         recalculateFieldRepresentationProperty();
     }
 
@@ -43,6 +66,7 @@ public class MapField {
     public void addTurtlesOnTop(List<Turtle> newTurtles) {
         newTurtles.forEach(turtle -> turtle.setPosition(position));
         turtles = Stream.concat(turtles.stream(), newTurtles.stream()).toList();
+        handleTurtleEatingFruit();
         recalculateFieldRepresentationProperty();
     }
 
@@ -54,15 +78,32 @@ public class MapField {
         return fieldRepresentationProperty;
     }
 
-    public Optional<Turtle> getUpperMostTurtle() {
+    public Optional<Turtle> getWinningTurtle() {
         if (turtles.isEmpty()) {
             return Optional.empty();
         } else {
-            return Optional.of(turtles.get(turtles.size() - 1));
+            return turtles.stream()
+                    .max(Comparator.comparingInt(turtle -> turtle.getOwner().getScore()));
         }
     }
 
-    private void addBackgroundWithBorder(Color color){
+    public void setAsStart() {
+        this.isStart = true;
+        recalculateFieldRepresentationProperty();
+    }
+
+    public void setAsFinish() {
+        this.isFinish = true;
+        recalculateFieldRepresentationProperty();
+    }
+
+    private void handleTurtleEatingFruit() {
+        var firstTurtle = turtles.get(0);
+        fruit.ifPresent(fruit -> firstTurtle.getOwner().eatFruit(fruit));
+        fruit = Optional.empty();
+    }
+
+    private void addBackgroundWithBorder(Color color) {
         FlowPane background = new FlowPane(Orientation.VERTICAL, 0, 0);
         background.setPrefWidth(CELL_SIZE);
         background.setPrefHeight(CELL_SIZE);
@@ -75,19 +116,8 @@ public class MapField {
         addBackgroundWithBorder(Color.GREEN);
     }
 
-    public void setAsStart() {
-        this.isStart = true;
-        recalculateFieldRepresentationProperty();
-    }
-
     private void markAsFinish() {
         addBackgroundWithBorder(Color.RED);
-        System.out.println("hereeee");
-    }
-
-    public void setAsFinish() {
-        this.isFinish = true;
-        recalculateFieldRepresentationProperty();
     }
 
     private void addBorder(FlowPane flowPane, Color color) {
@@ -105,14 +135,14 @@ public class MapField {
     }
 
     private void recalculateFieldRepresentationProperty() {
-        if(isStart){
+        if (isStart) {
             markAsStart();
-        }
-        else if(isFinish){
+        } else if (isFinish) {
             markAsFinish();
         }
 
         FlowPane flowPane = new FlowPane(Orientation.VERTICAL, 0, 1);
+        fruit.ifPresent(value -> flowPane.getChildren().add(value.getGraphicalRepresentation()));
         List<Turtle> turtlesCopy = new ArrayList<>(turtles);
         Collections.reverse(turtlesCopy);
         turtlesCopy.forEach(turtle -> flowPane.getChildren().add(turtle.getGraphicalRepresentation()));
@@ -120,9 +150,9 @@ public class MapField {
         flowPane.setPrefWidth(CELL_SIZE);
         flowPane.setAlignment(Pos.CENTER);
 
-        if(isStart || isFinish){
+        if (isStart || isFinish) {
             fieldRepresentationProperty.get().getChildren().add(flowPane);
-        }else{
+        } else {
             fieldRepresentationProperty.set(flowPane);
         }
     }

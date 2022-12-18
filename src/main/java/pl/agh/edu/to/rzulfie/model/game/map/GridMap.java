@@ -1,11 +1,9 @@
 package pl.agh.edu.to.rzulfie.model.game.map;
 
-import pl.agh.edu.to.rzulfie.model.game.turtle.Move;
+import pl.agh.edu.to.rzulfie.model.game.turtle.Fruit;
 import pl.agh.edu.to.rzulfie.model.game.turtle.Turtle;
 import pl.agh.edu.to.rzulfie.model.game.utils.Vector;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -54,53 +52,80 @@ public class GridMap {
     }
 
     public Optional<Turtle> getWinner() {
-        MapField metaMapField = getField(finishPosition).orElseThrow(
+        MapField finishField = getField(finishPosition).orElseThrow(
                 () -> new IllegalStateException("Finish field was not initialized"));
 
-        return metaMapField.getUpperMostTurtle();
+        return finishField.getWinningTurtle();
     }
 
     public Optional<MapField> getFieldWithTurtle(Turtle turtle) {
         return Optional.ofNullable(fieldsByPosition.get(turtle.getPosition()));
     }
 
-    public static GridMap SampleSimpleMap(){
+    public static GridMap sampleSimpleMap() {
         int mapLength = 10;
-        MapCreator mapCreator = new MapCreator(new Vector(mapLength,0));
+        MapCreator mapCreator = new MapCreator(new Vector(mapLength, 0));
 
         for (int x = 0; x < mapLength; x++) {
-            mapCreator.addMapField(new Vector(x,0));
+            mapCreator.addMapField(new Vector(x, 0));
         }
-        mapCreator.markAsStartField(new Vector(0,0));
-        mapCreator.markAsFinishField(new Vector(mapLength-1,0));
+        mapCreator.markAsStartField(new Vector(0, 0));
+        mapCreator.markAsFinishField(new Vector(mapLength - 1, 0));
 
         return mapCreator.create();
     }
 
-    public static GridMap SampleComplexMap(){
-        MapCreator mapCreator = new MapCreator(new Vector(10,10));
+    public static GridMap sampleComplexMap() {
+        MapCreator mapCreator = new MapCreator(new Vector(10, 10));
 
-        mapCreator.addMapField(new Vector(2,5));
-        mapCreator.markAsStartField(new Vector(2,5));
+        mapCreator.addMapField(new Vector(2, 5));
+        mapCreator.markAsStartField(new Vector(2, 5));
 
-//      'main' way
-        mapCreator.addMapField(new Vector(3,5));
-        mapCreator.addMapField(new Vector(4,5));
-        mapCreator.addMapField(new Vector(5,5));
-        mapCreator.addMapField(new Vector(6,5));
-        mapCreator.addMapField(new Vector(7,5));
-        mapCreator.addMapField(new Vector(7,4));
-        mapCreator.addMapField(new Vector(7,3));
-        mapCreator.addMapField(new Vector(7,2));
+        //      'main' way
+        mapCreator.addMapField(new Vector(3, 5));
+        mapCreator.addLinkBetweenFields(new Vector(2, 5), new Vector(3, 5));
 
-//        shortcut
-        mapCreator.addMapField(new Vector(5,4));
-        mapCreator.addMapField(new Vector(5,3));
-        mapCreator.addMapField(new Vector(5,2));
+        mapCreator.addMapField(new Vector(4, 5));
+        mapCreator.addLinkBetweenFields(new Vector(3, 5), new Vector(4, 5));
 
-        mapCreator.addMapField(new Vector(6,2));
-        mapCreator.markAsFinishField(new Vector(6,2));
+        mapCreator.addMapField(new Vector(5, 5));
+        mapCreator.addLinkBetweenFields(new Vector(4, 5), new Vector(5, 5));
 
+        mapCreator.addMapField(new Vector(6, 5));
+        mapCreator.addLinkBetweenFields(new Vector(5, 5), new Vector(6, 5));
+
+        mapCreator.addMapField(new Vector(7, 5));
+        mapCreator.addLinkBetweenFields(new Vector(6, 5), new Vector(7, 5));
+
+        mapCreator.addMapField(new Vector(7, 4));
+        mapCreator.addLinkBetweenFields(new Vector(7, 5), new Vector(7, 4));
+
+        mapCreator.addMapField(new Vector(7, 3));
+        mapCreator.addLinkBetweenFields(new Vector(7, 4), new Vector(7, 3));
+
+        mapCreator.addMapField(new Vector(7, 2));
+        mapCreator.addLinkBetweenFields(new Vector(7, 3), new Vector(7, 2));
+
+        //      shortcut
+        mapCreator.addMapField(new Vector(5, 4));
+        mapCreator.addLinkBetweenFields(new Vector(5, 5), new Vector(5, 4));
+
+        mapCreator.addMapField(new Vector(5, 3));
+        mapCreator.addLinkBetweenFields(new Vector(5, 4), new Vector(5, 3));
+
+        mapCreator.addMapField(new Vector(5, 2));
+        mapCreator.addLinkBetweenFields(new Vector(5, 3), new Vector(5, 2));
+
+        mapCreator.addMapField(new Vector(6, 2));
+        mapCreator.addLinkBetweenFields(new Vector(5, 2), new Vector(6, 2));
+        mapCreator.addLinkBetweenFields(new Vector(6, 2), new Vector(7, 2));
+
+        mapCreator.markAsFinishField(new Vector(6, 2));
+
+        mapCreator.addFruit(new Vector(6, 5), 10);
+        mapCreator.addFruit(new Vector(7, 4), 10);
+        mapCreator.addFruit(new Vector(7, 2), 10);
+        mapCreator.addFruit(new Vector(5, 3), 10);
 
         return mapCreator.create();
     }

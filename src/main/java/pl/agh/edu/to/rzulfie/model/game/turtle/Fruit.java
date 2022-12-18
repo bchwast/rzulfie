@@ -1,5 +1,12 @@
 package pl.agh.edu.to.rzulfie.model.game.turtle;
 
-public class Fruit {
-    private final int value = 1;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
+
+public record Fruit(int value) {
+
+    public Shape getGraphicalRepresentation() {
+        return new Circle(5, Color.BROWN);
+    }
 }

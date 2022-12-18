@@ -22,7 +22,7 @@ import pl.agh.edu.to.rzulfie.model.GameResult;
 import pl.agh.edu.to.rzulfie.model.game.GameState;
 import pl.agh.edu.to.rzulfie.model.game.map.EmptyCell;
 import pl.agh.edu.to.rzulfie.model.game.map.GridMap;
-import pl.agh.edu.to.rzulfie.model.game.turtle.Move;
+import pl.agh.edu.to.rzulfie.model.game.map.MapField;
 import pl.agh.edu.to.rzulfie.model.game.turtle.Turtle;
 import pl.agh.edu.to.rzulfie.model.game.utils.Vector;
 import pl.agh.edu.to.rzulfie.model.service.GameResultService;
@@ -83,15 +83,10 @@ public class ApplicationController {
     public void startButtonClicked() {
         int playersAmount = numberOfPlayersComboBox.getValue();
         gameState = new GameState(playersAmount);
-        gridMap = GridMap.SampleComplexMap();
+        gridMap = GridMap.sampleComplexMap();
         initializeMap();
         printPlayers();
         gridMap.spawnTurtlesOnMap(gameState.getTurtles());
-
-
-//        gridMap.addFruitToMap(new Fruit(123), new Vector(0, 0)); # adding fruit to map
-
-
 
         turtleComboBox.setItems(FXCollections.observableList(gameState.getTurtles()));
         turtleComboBox.getSelectionModel().select(0);
@@ -192,7 +187,6 @@ public class ApplicationController {
                 var field = gridMap.getField(new Vector(x, y));
                 GridPane.setHalignment(label, HPos.CENTER);
                 if (field.isPresent()) {
-                    label.labelForProperty().bind(field.get().fieldRepresentationProperty());
                     label.graphicProperty().bind(field.get().fieldRepresentationProperty());
                     stackPane.setOnMouseClicked(event -> {
                         gridMap.makeMove(gameState.getCurrentTurtle(), field.get().getPosition());
@@ -204,7 +198,7 @@ public class ApplicationController {
                     paneByPosition.put(new Vector(x, y), stackPane);
                     stackPane.getChildren().addAll(label);
                     mapPane.add(stackPane, x, mapSize.getYCoordinate() - y);
-                }else{
+                } else {
                     label.graphicProperty().bind(new EmptyCell().fieldRepresentationProperty());
                     mapPane.add(label, x, mapSize.getYCoordinate() - y);
                 }

@@ -24,6 +24,10 @@ public class Vector {
         return new Vector(xCoordinate + vector.getXCoordinate(), yCoordinate + vector.getYCoordinate());
     }
 
+    public Vector subtract(Vector vector) {
+        return new Vector(xCoordinate - vector.getXCoordinate(), yCoordinate - vector.getYCoordinate());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
