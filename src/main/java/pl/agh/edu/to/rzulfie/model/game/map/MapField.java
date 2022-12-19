@@ -105,8 +105,6 @@ public class MapField {
 
     private void addBackgroundWithBorder(Color color) {
         FlowPane background = new FlowPane(Orientation.VERTICAL, 0, 0);
-        background.setPrefWidth(CELL_SIZE);
-        background.setPrefHeight(CELL_SIZE);
         addBorder(background, color);
 
         fieldRepresentationProperty.set(background);
@@ -117,7 +115,7 @@ public class MapField {
     }
 
     private void markAsFinish() {
-        addBackgroundWithBorder(Color.LIGHTBLUE);
+        addBackgroundWithBorder(Color.RED);
     }
 
     private void addBorder(FlowPane flowPane, Color color) {
@@ -146,8 +144,8 @@ public class MapField {
         List<Turtle> turtlesCopy = new ArrayList<>(turtles);
         Collections.reverse(turtlesCopy);
         turtlesCopy.forEach(turtle -> flowPane.getChildren().add(turtle.getGraphicalRepresentation()));
-        flowPane.setPrefWrapLength(CELL_SIZE);
-        flowPane.setPrefWidth(CELL_SIZE);
+        flowPane.setPrefWrapLength(CELL_SIZE-3);
+        flowPane.setPrefWidth(CELL_SIZE-3);
         flowPane.setAlignment(Pos.CENTER);
 
         if (isStart || isFinish) {

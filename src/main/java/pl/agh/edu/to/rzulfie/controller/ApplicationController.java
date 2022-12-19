@@ -6,11 +6,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
-import javafx.scene.Parent;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,7 +22,6 @@ import pl.agh.edu.to.rzulfie.model.GameResult;
 import pl.agh.edu.to.rzulfie.model.game.GameState;
 import pl.agh.edu.to.rzulfie.model.game.map.GridMap;
 import pl.agh.edu.to.rzulfie.model.game.map.MapField;
-import pl.agh.edu.to.rzulfie.model.game.map.UnavailableCell;
 import pl.agh.edu.to.rzulfie.model.game.turtle.Turtle;
 import pl.agh.edu.to.rzulfie.model.game.utils.Vector;
 import pl.agh.edu.to.rzulfie.model.service.GameResultService;
@@ -36,7 +39,6 @@ import java.util.stream.IntStream;
 public class ApplicationController {
 
     public static final double CELL_SIZE = 60;
-    public static final String BACKGROUND_COLOR_LIGHTBLUE = "-fx-background-color: lightblue";
 
     @FXML
     private ComboBox<Turtle> turtleComboBox;
@@ -49,26 +51,30 @@ public class ApplicationController {
     @FXML
     private Text winner;
     @FXML
+    private TableView<GameResult> gameHistoryTable;
+    @FXML
+    private TableColumn<GameResult, Date> dateColumn;
+    @FXML
+    private TableColumn<GameResult, String> winnerColumn;
+    @FXML
     private Text playerTurtle;
     @FXML
     private Button startButton;
-    @FXML
-    private BorderPane scoreboard;
-    @FXML
-    private ScoreboardController scoreboardController;
-    @FXML
-    private Button toggleScoreboardButton;
 
     private final List<StackPane> activeFields = new ArrayList<>();
     private final Map<Vector, StackPane> paneByPosition = new HashMap<>();
 
+    private final GameResultService gameResultService;
     private GameState gameState;
     private GridMap gridMap;
 
+    @Autowired
+    public ApplicationController(GameResultService gameResultService) {
+        this.gameResultService = gameResultService;
+    }
+
     @FXML
     public void initialize() {
-        scoreboard.setVisible(false);
-        scoreboard.managedProperty().bind(scoreboard.visibleProperty());
         initializeStartingState();
         initializeBindings();
     }
@@ -76,7 +82,7 @@ public class ApplicationController {
     public void startButtonClicked() {
         int playersAmount = numberOfPlayersComboBox.getValue();
         gameState = new GameState(playersAmount);
-        gridMap = GridMap.getSampleComplexMap();
+        gridMap = GridMap.sampleComplexMap();
         initializeMap();
         printPlayers();
         gridMap.spawnTurtlesOnMap(gameState.getTurtles());
@@ -100,6 +106,11 @@ public class ApplicationController {
     }
 
     private void initializeStartingState() {
+        ObservableList<GameResult> tableData = FXCollections.observableArrayList(gameResultService.getAllResults());
+        dateColumn.setCellValueFactory(dataValue -> new SimpleObjectProperty<>(dataValue.getValue().getGameDate()));
+        winnerColumn.setCellValueFactory(dataValue -> new SimpleStringProperty(dataValue.getValue().getWinnerName()));
+        gameHistoryTable.setItems(tableData);
+
         numberOfPlayersComboBox.getItems().clear();
         numberOfPlayersComboBox.getItems().addAll(IntStream.rangeClosed(1, 6).boxed().toList());
         turtleComboBox.setItems(FXCollections.emptyObservableList());
@@ -123,20 +134,24 @@ public class ApplicationController {
         if (isFinished) {
             clearEnabledFields();
             winner.visibleProperty().set(true);
-            scoreboardController.updateScore(gameState.getWinner().getName(), gameState.getWinner().getScore());
+            gameResultService.addResult(
+                    new GameResult(
+                            gameState.getWinner().getName(),
+                            Date.from(Instant.now()),
+                            gameState.getWinner().getScore()
+                    )
+            );
             initializeStartingState();
         }
-    }
-
-    public void toggleScoreboardButtonClicked() {
-        scoreboard.setVisible(!scoreboard.isVisible());
     }
 
     private void setFieldsEnabledForMove(MapField field) {
         field.getPossibleMoves().forEach(move -> {
             StackPane pane = paneByPosition.get(field.getPosition().add(move.toVector()));
             pane.setMouseTransparent(false);
-            pane.setStyle(BACKGROUND_COLOR_LIGHTBLUE);
+            pane.setMaxWidth(CELL_SIZE-3);
+            pane.setMaxHeight(CELL_SIZE-3);
+            pane.setStyle("-fx-background-color: lightblue");
             activeFields.add(pane);
         });
     }
@@ -147,6 +162,14 @@ public class ApplicationController {
             field.setMouseTransparent(true);
         });
         activeFields.clear();
+    }
+
+    private FlowPane createUnavailableCell(){
+         var image = new Rectangle(CELL_SIZE-1, CELL_SIZE-1, Color.LIGHTGRAY);
+        FlowPane flowPane = new FlowPane(Orientation.VERTICAL, 0, 0);
+        flowPane.getChildren().add(image);
+        flowPane.setPrefWrapLength(CELL_SIZE);
+        return flowPane;
     }
 
     private void initializeMap() {
@@ -185,7 +208,7 @@ public class ApplicationController {
                     stackPane.getChildren().addAll(label);
                     mapPane.add(stackPane, x, mapSize.getYCoordinate() - y);
                 } else {
-                    label.graphicProperty().bind(new UnavailableCell().fieldRepresentationProperty());
+                    label.graphicProperty().set(createUnavailableCell());
                     mapPane.add(label, x, mapSize.getYCoordinate() - y);
                 }
             }
