@@ -1,6 +1,7 @@
 package pl.agh.edu.to.rzulfie.model.game;
 
 import org.junit.jupiter.api.Test;
+import pl.agh.edu.to.rzulfie.model.game.utils.Vector;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

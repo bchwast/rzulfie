@@ -5,6 +5,14 @@
 In order to run application, use gradle script
 
 ## Changelog:
+#### Milestone 2:
+* added 2d map
+* added fruits to the map
+* changed turtle movement selection
+* added points to scoreboard
+* repackaged various elements
+* fixed minor bugs
+
 #### Milestone 1:
 * created model with turtles, players and 1d map
 * created games history persistence

@@ -1,39 +1,35 @@
 package pl.agh.edu.to.rzulfie.controller;
 
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.agh.edu.to.rzulfie.model.GameResult;
 import pl.agh.edu.to.rzulfie.model.game.GameState;
-import pl.agh.edu.to.rzulfie.model.game.GridMap;
-import pl.agh.edu.to.rzulfie.model.game.Move;
-import pl.agh.edu.to.rzulfie.model.game.Turtle;
-import pl.agh.edu.to.rzulfie.model.game.Vector;
-import pl.agh.edu.to.rzulfie.model.service.GameResultService;
+import pl.agh.edu.to.rzulfie.model.game.map.GridMap;
+import pl.agh.edu.to.rzulfie.model.game.map.MapField;
+import pl.agh.edu.to.rzulfie.model.game.turtle.Turtle;
+import pl.agh.edu.to.rzulfie.model.game.utils.Vector;
 
-import java.time.Instant;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Component
 public class ApplicationController {
 
-    private static final double CELL_SIZE = 60;
+    public static final double CELL_SIZE = 66;
+    public static final String BACKGROUND_COLOR_LIGHTBLUE = "-fx-background-color: lightblue";
 
     @FXML
     private ComboBox<Turtle> turtleComboBox;
@@ -46,31 +42,25 @@ public class ApplicationController {
     @FXML
     private Text winner;
     @FXML
-    private Button moveRightButton;
-    @FXML
-    private Button moveLeftButton;
-    @FXML
-    private TableView<GameResult> gameHistoryTable;
-    @FXML
-    private TableColumn<GameResult, Date> dateColumn;
-    @FXML
-    private TableColumn<GameResult, String> winnerColumn;
-    @FXML
     private Text playerTurtle;
     @FXML
     private Button startButton;
+    @FXML
+    private BorderPane scoreboard;
+    @FXML
+    private ScoreboardController scoreboardController;
+    @FXML
+    private Button toggleScoreboardButton;
 
-    private final GameResultService gameResultService;
+    private final List<StackPane> activeFields = new ArrayList<>();
+    private final Map<Vector, StackPane> paneByPosition = new HashMap<>();
     private GameState gameState;
     private GridMap gridMap;
 
-    @Autowired
-    public ApplicationController(GameResultService gameResultService) {
-        this.gameResultService = gameResultService;
-    }
-
     @FXML
     public void initialize() {
+        scoreboard.setVisible(false);
+        scoreboard.managedProperty().bind(scoreboard.visibleProperty());
         initializeStartingState();
         initializeBindings();
     }
@@ -78,44 +68,30 @@ public class ApplicationController {
     public void startButtonClicked() {
         int playersAmount = numberOfPlayersComboBox.getValue();
         gameState = new GameState(playersAmount);
-        gridMap = GridMap.generateStraightLineGridMap();
+        gridMap = GridMap.getSampleComplexMap();
         initializeMap();
         printPlayers();
+        gridMap.spawnTurtlesOnMap(gameState.getTurtles());
 
-        // set combo box items to turtles
         turtleComboBox.setItems(FXCollections.observableList(gameState.getTurtles()));
         turtleComboBox.getSelectionModel().select(0);
         gameState.currentTurtleProperty().bind(turtleComboBox.valueProperty());
 
-        // bind current player label to current player
-        // bind winner text to winning player
         currentPlayer.textProperty().bind(gameState.currentPlayerProperty().asString());
         winner.textProperty().bind(gameState.winnerProperty().asString());
         winner.visibleProperty().set(false);
 
-        // add turtles to the map
-        gridMap.spawnTurtlesOnMap(gameState.getTurtles());
+        gameState.getTurtles().forEach(turtle ->
+                turtle.positionProperty().addListener(((observable, oldValue, newValue) -> {
+                    clearEnabledFields();
+                    Optional<MapField> fieldOptional = gridMap.getField(newValue);
+                    fieldOptional.ifPresent(this::setFieldsEnabledForMove);
+                })));
 
         winner.visibleProperty().set(false);
     }
 
-    public void moveRightButtonClicked() {
-        gridMap.makeMove(gameState.getCurrentTurtle(), Move.RIGHT);
-        checkGameOver();
-        gameState.nextPlayer();
-    }
-
-    public void moveLeftButtonClicked() {
-        gridMap.makeMove(gameState.getCurrentTurtle(), Move.LEFT);
-        gameState.nextPlayer();
-    }
-
     private void initializeStartingState() {
-        ObservableList<GameResult> tableData = FXCollections.observableArrayList(gameResultService.getAllResults());
-        dateColumn.setCellValueFactory(dataValue -> new SimpleObjectProperty<>(dataValue.getValue().getGameDate()));
-        winnerColumn.setCellValueFactory(dataValue -> new SimpleStringProperty(dataValue.getValue().getWinnerName()));
-        gameHistoryTable.setItems(tableData);
-
         numberOfPlayersComboBox.getItems().clear();
         numberOfPlayersComboBox.getItems().addAll(IntStream.rangeClosed(1, 6).boxed().toList());
         turtleComboBox.setItems(FXCollections.emptyObservableList());
@@ -123,14 +99,12 @@ public class ApplicationController {
 
     private void initializeBindings() {
         startButton.disableProperty().bind(numberOfPlayersComboBox.valueProperty().isNull());
-        moveRightButton.disableProperty().bind(turtleComboBox.valueProperty().isNull());
-        moveLeftButton.disableProperty().bind(turtleComboBox.valueProperty().isNull());
 
         turtleComboBox.valueProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                moveLeftButton.disableProperty()
-                        .bind(newValue.positionProperty().isEqualTo(gridMap.getStartPosition())
-                                .or(turtleComboBox.valueProperty().isNull()));
+                Optional<MapField> fieldWithTurtle = gridMap.getFieldWithTurtle(newValue);
+                clearEnabledFields();
+                fieldWithTurtle.ifPresent(this::setFieldsEnabledForMove);
             }
         }));
     }
@@ -139,10 +113,42 @@ public class ApplicationController {
         Optional<Turtle> winningTurtle = gridMap.getWinner();
         boolean isFinished = gameState.handleWinner(winningTurtle);
         if (isFinished) {
+            clearEnabledFields();
             winner.visibleProperty().set(true);
-            gameResultService.addResult(new GameResult(gameState.getWinner().getName(), Date.from(Instant.now())));
+            scoreboardController.updateScore(gameState.getWinner().getName(), gameState.getWinner().getScore());
             initializeStartingState();
         }
+    }
+
+    public void toggleScoreboardButtonClicked() {
+        scoreboard.setVisible(!scoreboard.isVisible());
+    }
+
+    private void setFieldsEnabledForMove(MapField field) {
+        field.getPossibleMoves().forEach(move -> {
+            StackPane pane = paneByPosition.get(field.getPosition().add(move.toVector()));
+            pane.setMouseTransparent(false);
+            pane.setMaxWidth(CELL_SIZE-3);
+            pane.setMaxHeight(CELL_SIZE-3);
+            pane.setStyle(BACKGROUND_COLOR_LIGHTBLUE);
+            activeFields.add(pane);
+        });
+    }
+
+    private void clearEnabledFields() {
+        activeFields.forEach(field -> {
+            field.setStyle("");
+            field.setMouseTransparent(true);
+        });
+        activeFields.clear();
+    }
+
+    private FlowPane createUnavailableCell(){
+         var image = new Rectangle(CELL_SIZE-1, CELL_SIZE-1, Color.LIGHTGRAY);
+        FlowPane flowPane = new FlowPane(Orientation.VERTICAL, 0, 0);
+        flowPane.getChildren().add(image);
+        flowPane.setPrefWrapLength(CELL_SIZE);
+        return flowPane;
     }
 
     private void initializeMap() {
@@ -150,7 +156,6 @@ public class ApplicationController {
         mapPane.setGridLinesVisible(false);
         mapPane.getColumnConstraints().clear();
         mapPane.getRowConstraints().clear();
-
         mapPane.setGridLinesVisible(true);
         Vector mapSize = gridMap.getMapSize();
 
@@ -165,12 +170,24 @@ public class ApplicationController {
         // Bind turtle description for field to label representing map field
         for (int x = 0; x <= mapSize.getXCoordinate(); x++) {
             for (int y = 0; y <= mapSize.getYCoordinate(); y++) {
+                var stackPane = new StackPane();
                 var label = new Label();
                 var field = gridMap.getField(new Vector(x, y));
                 GridPane.setHalignment(label, HPos.CENTER);
                 if (field.isPresent()) {
-                    label.labelForProperty().bind(field.get().fieldRepresentationProperty());
                     label.graphicProperty().bind(field.get().fieldRepresentationProperty());
+                    stackPane.setOnMouseClicked(event -> {
+                        gridMap.makeMove(gameState.getCurrentTurtle(), field.get().getPosition());
+                        checkGameOver();
+                        gameState.nextPlayer();
+                    });
+                    stackPane.setPrefSize(CELL_SIZE, CELL_SIZE);
+                    stackPane.setMouseTransparent(true);
+                    paneByPosition.put(new Vector(x, y), stackPane);
+                    stackPane.getChildren().addAll(label);
+                    mapPane.add(stackPane, x, mapSize.getYCoordinate() - y);
+                } else {
+                    label.graphicProperty().set(createUnavailableCell());
                     mapPane.add(label, x, mapSize.getYCoordinate() - y);
                 }
             }

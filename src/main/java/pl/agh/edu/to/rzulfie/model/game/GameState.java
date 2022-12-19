@@ -2,6 +2,8 @@ package pl.agh.edu.to.rzulfie.model.game;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import pl.agh.edu.to.rzulfie.model.game.turtle.Color;
+import pl.agh.edu.to.rzulfie.model.game.turtle.Turtle;
 
 import java.util.List;
 import java.util.Optional;

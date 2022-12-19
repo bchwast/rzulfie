@@ -1,8 +1,10 @@
-package pl.agh.edu.to.rzulfie.model.game;
+package pl.agh.edu.to.rzulfie.model.game.turtle;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.shape.Rectangle;
+import pl.agh.edu.to.rzulfie.model.game.Player;
+import pl.agh.edu.to.rzulfie.model.game.utils.Vector;
 
 public class Turtle {
 
