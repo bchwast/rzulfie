@@ -82,8 +82,11 @@ public class MapField {
         if (turtles.isEmpty()) {
             return Optional.empty();
         } else {
-            return turtles.stream()
-                    .max(Comparator.comparingInt(turtle -> turtle.getOwner().getScore()));
+            // on top wins
+            return Optional.of(turtles.get(turtles.size() - 1));
+            // most points wins
+            // return turtles.stream()
+            //        .max(Comparator.comparingInt(turtle -> turtle.getOwner().getScore()));
         }
     }
 
