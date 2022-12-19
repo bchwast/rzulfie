@@ -62,7 +62,7 @@ public class GridMap {
         return Optional.ofNullable(fieldsByPosition.get(turtle.getPosition()));
     }
 
-    public static GridMap sampleSimpleMap() {
+    public static GridMap getSampleSimpleMap() {
         int mapLength = 10;
         MapCreator mapCreator = new MapCreator(new Vector(mapLength, 0));
 
@@ -75,7 +75,7 @@ public class GridMap {
         return mapCreator.create();
     }
 
-    public static GridMap sampleComplexMap() {
+    public static GridMap getSampleComplexMap() {
         MapCreator mapCreator = new MapCreator(new Vector(10, 10));
 
         mapCreator.addMapField(new Vector(2, 5));
