@@ -39,6 +39,7 @@ import java.util.stream.IntStream;
 public class ApplicationController {
 
     public static final double CELL_SIZE = 60;
+    public static final String BACKGROUND_COLOR_LIGHTBLUE = "-fx-background-color: lightblue";
 
     @FXML
     private ComboBox<Turtle> turtleComboBox;
