@@ -6,15 +6,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,7 +22,6 @@ import pl.agh.edu.to.rzulfie.model.GameResult;
 import pl.agh.edu.to.rzulfie.model.game.GameState;
 import pl.agh.edu.to.rzulfie.model.game.map.GridMap;
 import pl.agh.edu.to.rzulfie.model.game.map.MapField;
-import pl.agh.edu.to.rzulfie.model.game.map.UnavailableCell;
 import pl.agh.edu.to.rzulfie.model.game.turtle.Turtle;
 import pl.agh.edu.to.rzulfie.model.game.utils.Vector;
 import pl.agh.edu.to.rzulfie.model.service.GameResultService;
@@ -150,6 +149,8 @@ public class ApplicationController {
         field.getPossibleMoves().forEach(move -> {
             StackPane pane = paneByPosition.get(field.getPosition().add(move.toVector()));
             pane.setMouseTransparent(false);
+            pane.setMaxWidth(CELL_SIZE-3);
+            pane.setMaxHeight(CELL_SIZE-3);
             pane.setStyle("-fx-background-color: lightblue");
             activeFields.add(pane);
         });
@@ -161,6 +162,14 @@ public class ApplicationController {
             field.setMouseTransparent(true);
         });
         activeFields.clear();
+    }
+
+    private FlowPane createUnavailableCell(){
+         var image = new Rectangle(CELL_SIZE-1, CELL_SIZE-1, Color.LIGHTGRAY);
+        FlowPane flowPane = new FlowPane(Orientation.VERTICAL, 0, 0);
+        flowPane.getChildren().add(image);
+        flowPane.setPrefWrapLength(CELL_SIZE);
+        return flowPane;
     }
 
     private void initializeMap() {
@@ -199,7 +208,7 @@ public class ApplicationController {
                     stackPane.getChildren().addAll(label);
                     mapPane.add(stackPane, x, mapSize.getYCoordinate() - y);
                 } else {
-                    label.graphicProperty().bind(new UnavailableCell().fieldRepresentationProperty());
+                    label.graphicProperty().set(createUnavailableCell());
                     mapPane.add(label, x, mapSize.getYCoordinate() - y);
                 }
             }
