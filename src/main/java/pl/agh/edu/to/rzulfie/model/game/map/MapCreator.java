@@ -56,7 +56,6 @@ public class MapCreator {
         MapField field1 = fieldsByPosition.get(position1);
         MapField field2 = fieldsByPosition.get(position2);
         field1.addMove(Move.vectorToMove(field2.getPosition().subtract(field1.getPosition())));
-        field2.addMove(Move.vectorToMove(field1.getPosition().subtract(field2.getPosition())));
     }
 
     public Map<Vector, MapField> getFieldsByPosition() {

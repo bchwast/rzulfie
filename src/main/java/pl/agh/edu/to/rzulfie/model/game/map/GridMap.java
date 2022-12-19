@@ -118,9 +118,12 @@ public class GridMap {
 
         mapCreator.addMapField(new Vector(6, 2));
         mapCreator.addLinkBetweenFields(new Vector(5, 2), new Vector(6, 2));
-        mapCreator.addLinkBetweenFields(new Vector(6, 2), new Vector(7, 2));
+        mapCreator.addLinkBetweenFields(new Vector(7, 2), new Vector(6, 2));
 
-        mapCreator.markAsFinishField(new Vector(6, 2));
+        mapCreator.addMapField(new Vector(6, 1));
+        mapCreator.addLinkBetweenFields(new Vector(6, 2), new Vector(6, 1));
+
+        mapCreator.markAsFinishField(new Vector(6, 1));
 
         mapCreator.addFruit(new Vector(6, 5), 10);
         mapCreator.addFruit(new Vector(7, 4), 10);
