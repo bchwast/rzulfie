@@ -6,7 +6,9 @@ import javafx.scene.shape.Shape;
 
 public record Fruit(int value) {
 
-    public Shape getGraphicalRepresentation() {
-        return new Circle(5, Color.BROWN);
+    private static final int RADIUS = 5;
+
+    public static Shape getGraphicalRepresentation() {
+        return new Circle(RADIUS, Color.BROWN);
     }
 }
