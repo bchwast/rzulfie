@@ -1,8 +1,10 @@
 package pl.agh.edu.to.rzulfie.model.game;
 
-import javafx.scene.Node;
-import javafx.scene.shape.Rectangle;
 import org.junit.jupiter.api.Test;
+import pl.agh.edu.to.rzulfie.model.game.map.MapField;
+import pl.agh.edu.to.rzulfie.model.game.turtle.Color;
+import pl.agh.edu.to.rzulfie.model.game.turtle.Turtle;
+import pl.agh.edu.to.rzulfie.model.game.utils.Vector;
 
 import java.util.List;
 
@@ -24,7 +26,7 @@ class MapFieldTest {
 
         //when
         mapField.popTurtlesAboveTurtle(turtleA);
-        List<Node> resultRepresentation = mapField.fieldRepresentationProperty().get().getChildren();
+        List<Turtle> resultRepresentation = mapField.turtlesProperty().get();
 
         //then
         assertThat(resultRepresentation).isEqualTo(emptyList());
@@ -39,14 +41,14 @@ class MapFieldTest {
         Turtle turtleC = new Turtle(Color.GREEN, player);
         List<Turtle> turtles = List.of(turtleA, turtleB, turtleC);
         MapField mapField = new MapField(turtles, mock(Vector.class));
-        List<Rectangle> expectedFieldRepresentationList = List.of(turtleA.getGraphicalRepresentation());
+        List<Turtle> expectedTurtleList = List.of(turtleA);
 
         //when
         mapField.popTurtlesAboveTurtle(turtleB);
-        List<Node> resultRepresentation = mapField.fieldRepresentationProperty().get().getChildren();
+        List<Turtle> resultRepresentation = mapField.turtlesProperty().get();
 
         //then
-        assertThat(resultRepresentation).isEqualTo(expectedFieldRepresentationList);
+        assertThat(resultRepresentation).isEqualTo(expectedTurtleList);
     }
 
     @Test
@@ -59,15 +61,13 @@ class MapFieldTest {
         Turtle turtleD = new Turtle(Color.YELLOW, player);
         List<Turtle> turtles = List.of(turtleA, turtleB, turtleC);
         MapField mapField = new MapField(turtles, mock(Vector.class));
-        List<Node> expectedFieldRepresentationList =
-                List.of(turtleD.getGraphicalRepresentation(), turtleC.getGraphicalRepresentation(),
-                        turtleB.getGraphicalRepresentation(), turtleA.getGraphicalRepresentation());
+        List<Turtle> expectedTurtleList = List.of(turtleA, turtleB, turtleC, turtleD);
 
         //when
         mapField.addTurtlesOnTop(List.of(turtleD));
-        List<Node> resultRepresentation = mapField.fieldRepresentationProperty().get().getChildren();
+        List<Turtle> resultRepresentation = mapField.turtlesProperty().get();
 
         //then
-        assertThat(resultRepresentation).isEqualTo(expectedFieldRepresentationList);
+        assertThat(resultRepresentation).isEqualTo(expectedTurtleList);
     }
 }

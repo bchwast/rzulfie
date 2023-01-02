@@ -1,4 +1,4 @@
-package pl.agh.edu.to.rzulfie.model.game;
+package pl.agh.edu.to.rzulfie.model.game.turtle;
 
 import javafx.scene.shape.Rectangle;
 
@@ -10,10 +10,13 @@ public enum Color {
     ORANGE(javafx.scene.paint.Color.ORANGE),
     BROWN(javafx.scene.paint.Color.BROWN);
 
+    private static final int IMAGE_WIDTH = 25;
+    public static final int IMAGE_HEIGHT = 9;
+
     private final Rectangle image;
 
     Color(javafx.scene.paint.Color color) {
-        this.image = new Rectangle(25, 9, color);
+        this.image = new Rectangle(IMAGE_WIDTH, IMAGE_HEIGHT, color);
     }
 
     @Override
