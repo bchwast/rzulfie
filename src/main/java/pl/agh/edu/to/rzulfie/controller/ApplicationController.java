@@ -2,22 +2,31 @@ package pl.agh.edu.to.rzulfie.controller;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.agh.edu.to.rzulfie.model.game.GameState;
 import pl.agh.edu.to.rzulfie.model.game.map.GridMap;
+import pl.agh.edu.to.rzulfie.model.game.map.MapFactory;
 import pl.agh.edu.to.rzulfie.model.game.map.MapField;
 import pl.agh.edu.to.rzulfie.model.game.turtle.Turtle;
 import pl.agh.edu.to.rzulfie.model.game.utils.Vector;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,15 +56,17 @@ public class ApplicationController {
     private Button startButton;
     @FXML
     private BorderPane scoreboard;
-    @FXML
-    private ScoreboardController scoreboardController;
-    @FXML
-    private Button toggleScoreboardButton;
 
+    private final ScoreboardController scoreboardController;
     private final List<StackPane> activeFields = new ArrayList<>();
     private final Map<Vector, StackPane> paneByPosition = new HashMap<>();
     private GameState gameState;
     private GridMap gridMap;
+
+    @Autowired
+    public ApplicationController(ScoreboardController scoreboardController) {
+        this.scoreboardController = scoreboardController;
+    }
 
     @FXML
     public void initialize() {
@@ -65,10 +76,10 @@ public class ApplicationController {
         initializeBindings();
     }
 
-    public void startButtonClicked() {
+    public void startButtonClicked() throws IOException {
         int playersAmount = numberOfPlayersComboBox.getValue();
         gameState = new GameState(playersAmount);
-        gridMap = GridMap.getSampleComplexMap();
+        gridMap = MapFactory.sampleComplexMap();
         initializeMap();
         printPlayers();
         gridMap.spawnTurtlesOnMap(gameState.getTurtles());
@@ -125,11 +136,11 @@ public class ApplicationController {
     }
 
     private void setFieldsEnabledForMove(MapField field) {
-        field.getPossibleMoves().forEach(move -> {
+        gridMap.getPossibleMovesForPosition(field.getPosition()).forEach(move -> {
             StackPane pane = paneByPosition.get(field.getPosition().add(move.toVector()));
             pane.setMouseTransparent(false);
-            pane.setMaxWidth(CELL_SIZE-3);
-            pane.setMaxHeight(CELL_SIZE-3);
+            pane.setMaxWidth(CELL_SIZE - 3);
+            pane.setMaxHeight(CELL_SIZE - 3);
             pane.setStyle(BACKGROUND_COLOR_LIGHTBLUE);
             activeFields.add(pane);
         });
@@ -143,15 +154,15 @@ public class ApplicationController {
         activeFields.clear();
     }
 
-    private FlowPane createUnavailableCell(){
-         var image = new Rectangle(CELL_SIZE-1, CELL_SIZE-1, Color.LIGHTGRAY);
+    private FlowPane createUnavailableCell() {
+        var image = new Rectangle(CELL_SIZE - 1, CELL_SIZE - 1, Color.LIGHTGRAY);
         FlowPane flowPane = new FlowPane(Orientation.VERTICAL, 0, 0);
         flowPane.getChildren().add(image);
         flowPane.setPrefWrapLength(CELL_SIZE);
         return flowPane;
     }
 
-    private void initializeMap() {
+    private void initializeMap() throws IOException {
         mapPane.getChildren().clear();
         mapPane.setGridLinesVisible(false);
         mapPane.getColumnConstraints().clear();
@@ -175,7 +186,9 @@ public class ApplicationController {
                 var field = gridMap.getField(new Vector(x, y));
                 GridPane.setHalignment(label, HPos.CENTER);
                 if (field.isPresent()) {
-                    label.graphicProperty().bind(field.get().fieldRepresentationProperty());
+                    FXMLLoader fieldLoader = new FXMLLoader(getClass().getResource("/view/MapCellPane.fxml"));
+                    fieldLoader.setControllerFactory(arg -> new MapCellController(field.get()));
+                    label.graphicProperty().set(fieldLoader.load());
                     stackPane.setOnMouseClicked(event -> {
                         gridMap.makeMove(gameState.getCurrentTurtle(), field.get().getPosition());
                         checkGameOver();

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="pl.agh.edu.to.rzulfie.controller.MapCellController"
+            prefHeight="66.0" prefWidth="66.0">
+    <center>
+        <FlowPane fx:id="contentPane" prefHeight="66.0" prefWidth="66.0" vgap="1" orientation="VERTICAL"
+                  prefWrapLength="90.0" alignment="CENTER">
+        </FlowPane>
+    </center>
+</BorderPane>
