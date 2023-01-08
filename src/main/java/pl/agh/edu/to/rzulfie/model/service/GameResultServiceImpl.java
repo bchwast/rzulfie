@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 import pl.agh.edu.to.rzulfie.model.GameResult;
 import pl.agh.edu.to.rzulfie.model.repository.GameResultRepository;
 
-import java.util.List;
-
 @Service
 public class GameResultServiceImpl implements GameResultService {
 
@@ -20,10 +18,5 @@ public class GameResultServiceImpl implements GameResultService {
     @Override
     public void addResult(GameResult result) {
         repository.save(result);
-    }
-
-    @Override
-    public List<GameResult> getAllResults() {
-        return repository.findAll();
     }
 }

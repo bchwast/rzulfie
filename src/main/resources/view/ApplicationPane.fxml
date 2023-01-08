@@ -19,8 +19,8 @@
                 <Label text="Select number of players:" prefWidth="200"/>
                 <ComboBox fx:id="numberOfPlayersComboBox" prefWidth="100"/>
                 <Button fx:id="startButton" text="Start" onAction="#startButtonClicked"/>
-                <Text fx:id="playerTurtle"/>
-                <Button fx:id="toggleScoreboardButton" text="Toggle scoreboard" onAction="#toggleScoreboardButtonClicked"/>
+                <Text fx:id="playerTurtle" visible="false"/>
+                <Button text="Toggle scoreboard" onAction="#toggleScoreboardButtonClicked"/>
             </HBox>
             <HBox alignment="CENTER">
                 <Label text="Current player: " />
@@ -40,6 +40,8 @@
                 <Label text="Select turtle:"/>
                 <ComboBox fx:id="turtleComboBox"/>
             </HBox>
+            <Button fx:id="showCurrentPlayerTurtleButton" text="Show your turtle color"
+                    onAction="#showCurrentPlayerTurtle"/>
             <Label text="Winner:" prefWidth="100"/>
             <Text fx:id="winner"/>
         </HBox>

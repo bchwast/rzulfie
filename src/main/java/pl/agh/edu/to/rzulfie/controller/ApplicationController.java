@@ -55,6 +55,8 @@ public class ApplicationController {
     @FXML
     private Button startButton;
     @FXML
+    private Button showCurrentPlayerTurtleButton;
+    @FXML
     private BorderPane scoreboard;
 
     private final ScoreboardController scoreboardController;
@@ -81,7 +83,6 @@ public class ApplicationController {
         gameState = new GameState(playersAmount);
         gridMap = MapFactory.sampleComplexMap();
         initializeMap();
-        printPlayers();
         gridMap.spawnTurtlesOnMap(gameState.getTurtles());
 
         turtleComboBox.setItems(FXCollections.observableList(gameState.getTurtles()));
@@ -100,12 +101,14 @@ public class ApplicationController {
                 })));
 
         winner.visibleProperty().set(false);
+        showCurrentPlayerTurtleButton.setVisible(true);
     }
 
     private void initializeStartingState() {
         numberOfPlayersComboBox.getItems().clear();
         numberOfPlayersComboBox.getItems().addAll(IntStream.rangeClosed(1, 6).boxed().toList());
         turtleComboBox.setItems(FXCollections.emptyObservableList());
+        showCurrentPlayerTurtleButton.setVisible(false);
     }
 
     private void initializeBindings() {
@@ -121,18 +124,23 @@ public class ApplicationController {
     }
 
     private void checkGameOver() {
-        Optional<Turtle> winningTurtle = gridMap.getWinner();
-        boolean isFinished = gameState.handleWinner(winningTurtle);
+        Optional<Turtle> topTurtle = gridMap.getTopTurtleFromFinish();
+        boolean isFinished = gameState.handleTopOnFinish(topTurtle);
         if (isFinished) {
             clearEnabledFields();
             winner.visibleProperty().set(true);
-            scoreboardController.updateScore(gameState.getWinner().getName(), gameState.getWinner().getScore());
+            scoreboardController.updateScore(gameState.getPlayers());
             initializeStartingState();
         }
     }
 
     public void toggleScoreboardButtonClicked() {
         scoreboard.setVisible(!scoreboard.isVisible());
+    }
+
+    public void showCurrentPlayerTurtle() {
+        playerTurtle.setText("Your turtle: " + gameState.getCurrentPlayerTurtle().toString());
+        playerTurtle.setVisible(!playerTurtle.isVisible());
     }
 
     private void setFieldsEnabledForMove(MapField field) {
@@ -192,6 +200,7 @@ public class ApplicationController {
                     stackPane.setOnMouseClicked(event -> {
                         gridMap.makeMove(gameState.getCurrentTurtle(), field.get().getPosition());
                         checkGameOver();
+                        playerTurtle.setVisible(false);
                         gameState.nextPlayer();
                     });
                     stackPane.setPrefSize(CELL_SIZE, CELL_SIZE);
@@ -205,9 +214,5 @@ public class ApplicationController {
                 }
             }
         }
-    }
-
-    private void printPlayers() {
-        playerTurtle.setText(gameState.getTurtles().toString());
     }
 }

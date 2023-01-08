@@ -3,13 +3,17 @@ package pl.agh.edu.to.rzulfie.model.game;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import pl.agh.edu.to.rzulfie.model.game.turtle.Color;
+import pl.agh.edu.to.rzulfie.model.game.turtle.Fruit;
 import pl.agh.edu.to.rzulfie.model.game.turtle.Turtle;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class GameState {
+
+    private static final int TOP_TURTLE_POINTS = 20;
 
     private final ObjectProperty<Player> currentPlayer;
     private final ObjectProperty<Turtle> currentTurtle;
@@ -33,10 +37,6 @@ public class GameState {
         return currentPlayer;
     }
 
-    public Player getWinner() {
-        return winner.get();
-    }
-
     public ObjectProperty<Player> winnerProperty() {
         return winner;
     }
@@ -58,11 +58,25 @@ public class GameState {
         return turtles;
     }
 
-    public boolean handleWinner(Optional<Turtle> winningTurtleOptional) {
-        if (winningTurtleOptional.isPresent()) {
-            winner.set(winningTurtleOptional.get().getOwner());
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public boolean handleTopOnFinish(Optional<Turtle> topTurtleOptional) {
+        if (topTurtleOptional.isPresent()) {
+            Turtle topTurtle = topTurtleOptional.get();
+            topTurtle.getOwner().eatFruit(new Fruit(TOP_TURTLE_POINTS));
+            players.stream()
+                    .max(Comparator.comparingInt(Player::getScore))
+                    .ifPresent(winner::set);
             return true;
         }
         return false;
+    }
+
+    public Turtle getCurrentPlayerTurtle() {
+        return turtles.stream()
+                .filter(turtle -> turtle.getOwner().equals(currentPlayer.get()))
+                .findFirst().orElseThrow(() -> new IllegalStateException("No player selected or player has no turtle"));
     }
 }

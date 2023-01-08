@@ -54,7 +54,7 @@ public class GridMap {
                 .addTurtlesOnTop(turtles);
     }
 
-    public Optional<Turtle> getWinner() {
+    public Optional<Turtle> getTopTurtleFromFinish() {
         MapField finishField = getField(finishPosition).orElseThrow(
                 () -> new IllegalStateException("Finish field was not initialized"));
 

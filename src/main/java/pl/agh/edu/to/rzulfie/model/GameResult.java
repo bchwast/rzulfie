@@ -4,10 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-
-import java.util.Date;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class GameResult {
@@ -15,20 +13,21 @@ public class GameResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String winnerName;
+    private String playerName;
 
     private int score;
 
-    @Temporal(TemporalType.DATE)
-    private Date gameDate;
+    @ManyToOne
+    @JoinColumn(name = "game_id", nullable = false)
+    private Game game;
 
     public GameResult() {
     }
 
-    public GameResult(String winnerName, Date gameDate, int score) {
-        this.winnerName = winnerName;
-        this.gameDate = gameDate;
+    public GameResult(String playerName, int score, Game game) {
+        this.playerName = playerName;
         this.score = score;
+        this.game = game;
     }
 
     public int getId() {
@@ -39,20 +38,12 @@ public class GameResult {
         this.id = id;
     }
 
-    public String getWinnerName() {
-        return winnerName;
+    public String getPlayerName() {
+        return playerName;
     }
 
-    public void setWinnerName(String winnerName) {
-        this.winnerName = winnerName;
-    }
-
-    public Date getGameDate() {
-        return gameDate;
-    }
-
-    public void setGameDate(Date gameDate) {
-        this.gameDate = gameDate;
+    public void setPlayerName(String winnerName) {
+        this.playerName = winnerName;
     }
 
     public int getScore() {
