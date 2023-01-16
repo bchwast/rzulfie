@@ -39,6 +39,6 @@ public class Turtle {
 
     @Override
     public String toString() {
-        return color + " - " + owner;
+        return color.toString();
     }
 }
