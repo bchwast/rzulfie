@@ -5,6 +5,10 @@
 In order to run application, use gradle script
 
 ## Changelog:
+#### Milestone 3:
+* enhanced game results
+* current player's turtle is hidden by default
+
 #### Milestone 2:
 * added 2d map
 * added fruits to the map
